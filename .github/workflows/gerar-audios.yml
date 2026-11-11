@@ -1,0 +1,43 @@
+name: Gerar locução (ElevenLabs)
+
+on:
+  workflow_dispatch:
+    inputs:
+      idiomas:
+        description: "Idiomas separados por vírgula (es, it, pt, en)"
+        default: "es,it"
+        required: true
+      somente_estimar:
+        description: "Só calcular o custo, sem gerar"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Gerar áudios
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: |
+          if [ "${{ inputs.somente_estimar }}" = "true" ]; then
+            node scripts/gerar-audios.mjs --idiomas "${{ inputs.idiomas }}" --estimar
+          else
+            node scripts/gerar-audios.mjs --idiomas "${{ inputs.idiomas }}"
+          fi
+      - name: Salvar no repositório
+        if: ${{ inputs.somente_estimar != true }}
+        run: |
+          git config user.name "kidoria-bot"
+          git config user.email "kidoria-bot@users.noreply.github.com"
+          git add app/audio
+          git diff --cached --quiet && echo "Nada novo." && exit 0
+          git commit -m "Locução ElevenLabs: ${{ inputs.idiomas }}"
+          git push

@@ -305,6 +305,12 @@ try{const l=localStorage.getItem('lf-lang');if(LANGS[l])lang=l;}catch(e){}
 /* ---------- Voz e sons ---------- */
 const synth=window.speechSynthesis;
 let voices=[];
+function phraseKey(l,t){let h=0x811c9dc5;const s=l+'|'+t.normalize('NFC');
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}return h.toString(16).padStart(8,'0');}
+let REC={};
+try{fetch('audio/manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(m=>{REC=m||{};checkVoice();}).catch(()=>{});}catch(e){}
+const hasRec=(l,t)=>!!(REC[l]&&REC[l].includes(phraseKey(l,t)));
+const recLang=l=>!!(REC[l]&&REC[l].length);
 const normLang=v=>v.lang.replace('_','-').toLowerCase();
 /* Vozes do idioma, da melhor para a pior: "Natural"/online primeiro, depois a região padrão */
 function voicesOf(l){
@@ -323,12 +329,12 @@ function renderVoices(){
   sel.textContent='';
   list.forEach(v=>{const o=document.createElement('option');o.value=v.name;o.textContent=voiceLabel(v);sel.appendChild(o);});
   const cur=voiceFor(lang);if(cur)sel.value=cur.name;
-  sel.hidden=list.length<2;
+  sel.hidden=list.length<2||recLang(lang);
 }
 function checkVoice(){
   const n=$('notice');
-  if(!synth){n.hidden=false;n.textContent='Este navegador não tem voz. Abra o Kidoria ABC no Chrome, Edge ou Safari para ouvir os nomes.';return;}
-  if(voices.length&&!voiceFor(lang)){
+  if(!synth&&!recLang(lang)){n.hidden=false;n.textContent='Este navegador não tem voz. Abra o Kidoria ABC no Chrome, Edge ou Safari para ouvir os nomes.';return;}
+  if(voices.length&&!voiceFor(lang)&&!recLang(lang)){
     n.hidden=false;
     n.textContent=`Não encontrei voz em ${LANGS[lang].name} neste navegador/app. Se você acabou de instalar, feche e abra de novo. Ou abra o Kidoria ABC no Edge ou no Chrome.`;
   }else n.hidden=true;
@@ -344,7 +350,33 @@ function fixSpeech(t,l){
   if(l==='es')t=t.replace(/(^|\s)Y(?=[\s?.!,]|$)/g,'$1ye');
   return t;
 }
+/* ---------- Locução gravada (ElevenLabs) ----------
+   Os áudios ficam em audio/<idioma>/<chave>.mp3 e são gerados uma única vez
+   pelo GitHub Actions (.github/workflows/gerar-audios.yml). Tocar não gasta crédito.
+   Sem o arquivo, o app usa a voz do aparelho. */
+let player=null,playSeq=0;
+function stopAll(){playSeq++;try{synth&&synth.cancel();}catch(e){}if(player){try{player.pause();}catch(e){}player=null;}}
+/* Todas as frases que o app pode falar (usado pelo gerador de áudios) */
+function allPhrases(l){
+  const s=new Set([LANGS[l].name,LANGS[l].hi,UI[l].good,UI[l].retry]);
+  CATS.forEach(c=>{s.add(c.t[l]);c.items.forEach(it=>{const x=it[l];if(!x)return;
+    [x.say,x.q,x.name].forEach(t=>t&&s.add(t));});});
+  return [...s];
+}
 function speak(text,l=lang){
+  const parts=(Array.isArray(text)?text:[text]).filter(Boolean);
+  if(!parts.length)return;
+  stopAll();const seq=playSeq;
+  if(parts.every(t=>hasRec(l,t))){
+    let i=0;const next=()=>{if(seq!==playSeq||i>=parts.length)return;
+      player=new Audio('audio/'+l+'/'+phraseKey(l,parts[i++])+'.mp3');
+      player.onended=next;player.onerror=()=>{if(seq===playSeq)speakDevice(parts.slice(i-1).join(' '),l);};
+      player.play().catch(()=>{if(seq===playSeq)speakDevice(parts.slice(i-1).join(' '),l);});};
+    next();return;
+  }
+  speakDevice(parts.join(' '),l);
+}
+function speakDevice(text,l=lang){
   if(!synth||!text)return;
   const v=voiceFor(l);
   /* Sem voz do idioma, não fala: uma voz de outro idioma lendo espanhol ou italiano sai errada */
@@ -376,7 +408,7 @@ const buzz=()=>tone(160,.25,'sawtooth',0,.12);
 let noteTimer=null;
 function playNote(it,l=lang){
   clearTimeout(noteTimer);
-  try{synth&&synth.cancel();}catch(e){}
+  stopAll();
   tone(it.freq,.9);
   noteTimer=setTimeout(()=>speak(it[l].say,l),650);
 }
@@ -468,11 +500,11 @@ $('keys').addEventListener('click',e=>{
   if(it===target){
     locked=true;k.classList.add('right');stars++;$('stars').textContent='★ '+stars;chime();
     showItem(it,UI[lang].good);$('again').hidden=true;renderChips(null);
-    setTimeout(()=>speak(UI[lang].good+' '+it[lang].name),350);
+    setTimeout(()=>speak([UI[lang].good,it[lang].name]),350);
     setTimeout(()=>{if(mode==='quiz')newRound();},2600);
   }else{
     buzz();k.classList.remove('wrong');void k.offsetWidth;k.classList.add('wrong');
-    setTimeout(()=>speak(UI[lang].retry+' '+target[lang].q),250);
+    setTimeout(()=>speak([UI[lang].retry,target[lang].q]),250);
   }
 });
 $('tabs').addEventListener('click',e=>{
@@ -495,7 +527,7 @@ $('langs').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   lang=b.dataset.l;try{localStorage.setItem('lf-lang',lang);}catch(err){}
   target=null;speak(LANGS[lang].name,lang);checkVoice();refresh(false);
-  if(mode==='quiz')setTimeout(()=>speak(target[lang].q),900);
+  if(mode==='quiz')setTimeout(()=>{if(mode==='quiz'&&target)speak(target[lang].q);},900);
 });
 $('voice').addEventListener('change',e=>{
   try{localStorage.setItem('lf-voice-'+lang,e.target.value);}catch(err){}
