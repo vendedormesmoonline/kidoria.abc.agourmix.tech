@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kidoria ABC</title>
+<link rel="icon" type="image/webp" href="logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Livro de cartão com botões de apertar: céu ao fundo, página branca, teclas com "altura" física */
+  --sky:#BEE5FF; --page:#FFFFFF; --ink:#1B2A5B; --ink-soft:#5A6790;
+  --sun:#FFC93C; --tomato:#FF5A4E; --leaf:#22A565; --line:#DCE6F5;
+  --cat:#3D7BFF; --cat-dark:#2A58C2;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--sky);color:var(--ink);font-family:var(--body);font-weight:600;
+  -webkit-tap-highlight-color:transparent;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation}
+button:focus-visible{outline:4px solid var(--ink);outline-offset:2px}
+
+.app{height:100%;max-width:1180px;margin:0 auto;padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px}
+
+/* Cabeçalho */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.6rem;line-height:1;margin-right:auto;display:flex;align-items:center;gap:8px}
+.brand .logo{height:52px;width:auto;display:block}
+.brand i{font-style:normal;background:var(--sun);border-radius:12px;padding:4px 8px;box-shadow:0 3px 0 #D9A416}
+.seg{display:flex;background:var(--page);border-radius:999px;padding:4px;gap:3px;box-shadow:0 3px 0 rgba(27,42,91,.15)}
+.seg button{padding:8px 12px;border-radius:999px;font-weight:800;font-size:.95rem;min-height:40px;min-width:44px;color:var(--ink-soft)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.stars{font-family:var(--display);font-weight:800;font-size:1.1rem;background:var(--sun);border-radius:999px;padding:6px 14px;box-shadow:0 3px 0 #D9A416}
+.stars[hidden]{display:none}
+.voice{max-width:200px;min-height:40px;border:0;border-radius:999px;padding:0 14px;background:var(--page);color:var(--ink);
+  font:inherit;font-weight:800;font-size:.9rem;box-shadow:0 3px 0 rgba(27,42,91,.15);cursor:pointer}
+.voice[hidden]{display:none}
+
+/* Abas de categoria, como o índice lateral de um livro */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:16px 16px 6px 6px;
+  background:var(--page);font-weight:800;min-height:46px;border-bottom:5px solid var(--tc);color:var(--ink)}
+.tab b{font-family:var(--display);font-size:1.15rem;color:var(--tc)}
+.tab[aria-selected="true"]{background:var(--tc);color:#fff}
+.tab[aria-selected="true"] b{color:#fff}
+
+/* O livro */
+.book{flex:1;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:10px}
+.page{background:var(--page);border-radius:24px;box-shadow:0 6px 0 rgba(27,42,91,.14)}
+
+.stage{display:flex;align-items:center;gap:14px;padding:12px 14px;border:4px solid var(--cat)}
+.glyph{flex:0 0 auto;width:104px;height:104px;border-radius:20px;background:color-mix(in srgb,var(--cat) 14%,#fff);
+  display:grid;place-items:center;overflow:hidden}
+.glyph.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+.info{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.hint{font-size:.85rem;font-weight:800;color:var(--cat-dark);text-transform:uppercase;letter-spacing:.04em}
+.name{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,6vw,3rem);line-height:1.05;overflow-wrap:anywhere}
+.line{font-size:1.05rem;color:var(--ink-soft)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{padding:8px 14px;border-radius:999px;font-weight:800;font-size:.95rem;min-height:42px;
+  background:var(--ink);color:#fff;box-shadow:0 3px 0 #0C1638}
+.pill:active,.chip:active{transform:translateY(3px);box-shadow:none}
+.pill[hidden],.chips[hidden]{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:flex;align-items:center;gap:6px;padding:6px 12px 6px 6px;border-radius:999px;min-height:40px;
+  background:var(--sun);font-weight:800;font-size:.92rem;box-shadow:0 3px 0 #D9A416}
+.chip b{font-size:.72rem;background:var(--ink);color:#fff;border-radius:999px;padding:3px 7px;letter-spacing:.04em}
+
+.keys{padding:14px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:12px;align-content:start}
+.key{aspect-ratio:1/1.08;border-radius:18px;background:color-mix(in srgb,var(--cat) 12%,#fff);
+  border:3px solid var(--cat);box-shadow:0 6px 0 var(--cat-dark);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;transition:transform .06s,box-shadow .06s}
+.key:active{transform:translateY(5px);box-shadow:0 1px 0 var(--cat-dark)}
+.key small{font-size:.74rem;font-weight:800;line-height:1.1;text-align:center;overflow-wrap:anywhere}
+.quiz .key small{visibility:hidden}
+.key.right{background:#D7F7E5;border-color:var(--leaf);box-shadow:0 6px 0 #167A49}
+.key.wrong{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+.key.note{aspect-ratio:1/1.6;background:var(--nc);border-color:rgba(27,42,91,.25);box-shadow:0 6px 0 rgba(27,42,91,.35);color:#fff}
+.key.note small{font-size:1.2rem;font-family:var(--display)}
+
+.g-text{font-family:var(--display);font-weight:800;line-height:1;color:var(--cat-dark);font-size:2.3rem}
+.g-emoji{font-size:2.3rem;line-height:1}
+.g-color{width:52%;aspect-ratio:1;border-radius:50%;border:3px solid rgba(27,42,91,.2)}
+.g-shape{width:56%;height:auto}
+.glyph .g-text{font-size:4rem}.glyph .g-emoji{font-size:3.8rem}
+.dots{font-size:.6rem;letter-spacing:1px;color:var(--sun);-webkit-text-stroke:.5px #B98A00;line-height:1;max-width:100%;text-align:center}
+
+.notice{background:var(--tomato);color:#fff;border-radius:14px;padding:10px 14px;font-weight:800;font-size:.95rem}
+.notice[hidden]{display:none}
+
+@media (min-width:860px){
+  .book{grid-template-columns:minmax(300px,36%) 1fr;grid-template-rows:1fr}
+  .stage{flex-direction:column;justify-content:center;text-align:center;padding:24px}
+  .glyph{width:210px;height:210px;border-radius:32px}
+  .glyph .g-text{font-size:8rem}.glyph .g-emoji{font-size:7.5rem}
+  .info{flex:0 0 auto;align-items:center}
+  .actions,.chips{justify-content:center}
+  .keys{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:16px;padding:20px}
+  .g-text,.g-emoji{font-size:3rem}
+  .key small{font-size:.85rem}
+  .brand{font-size:2rem}
+}
+@media (max-width:560px){.brand .logo{height:38px}.brand i{font-size:1rem;padding:3px 7px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand" role="img" aria-label="Kidoria ABC"><img class="logo" src="logo.webp" alt="Kidoria" width="164" height="56"><i>ABC</i></div>
+    <div class="stars" id="stars" hidden aria-live="polite">★ 0</div>
+    <div class="seg" role="group" aria-label="Idioma da voz" id="langs"></div>
+    <select class="voice" id="voice" aria-label="Escolher a voz" hidden></select>
+    <div class="seg" role="group" aria-label="Modo">
+      <button id="mode-learn" aria-pressed="true">Aprender</button>
+      <button id="mode-quiz" aria-pressed="false">Desafio</button>
+    </div>
+  </header>
+
+  <div class="notice" id="notice" hidden></div>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Páginas do livro"></nav>
+
+  <main class="book">
+    <section class="page stage" aria-live="polite">
+      <div class="glyph" id="glyph"></div>
+      <div class="info">
+        <div class="hint" id="hint"></div>
+        <div class="name" id="name"></div>
+        <div class="line" id="line"></div>
+        <div class="actions">
+          <button class="pill" id="again">Ouvir de novo</button>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Em outros idiomas" hidden></div>
+      </div>
+    </section>
+    <section class="page keys" id="keys" aria-label="Teclas"></section>
+  </main>
+</div>
+
+<script>
+/* ---------- Idiomas ---------- */
+const LANGS={
+  pt:{code:'pt-BR',short:'PT',name:'Português',hi:'Olá! Vamos aprender?'},
+  en:{code:'en-US',short:'EN',name:'English',hi:'Hello! Let us learn.'},
+  es:{code:'es-ES',short:'ES',name:'Español',hi:'¡Hola! ¿Vamos a aprender?'},
+  it:{code:'it-IT',short:'IT',name:'Italiano',hi:'Ciao! Impariamo insieme?'}
+};
+const LK=Object.keys(LANGS);
+const UI={
+  pt:{learn:'Aprender',quiz:'Desafio',again:'Ouvir de novo',hearQ:'Ouvir a pergunta',tap:'Toque em uma tecla',
+      says:'O livro fala o nome para você.',music:'Cada tecla toca uma nota e fala o nome dela.',tapRight:'Toque na tecla certa.',
+      good:'Muito bem!',retry:'Tente de novo.',num:'Número',color:'Cor',shape:'Forma',note:'Nota musical',
+      sound:s=>`Faz ${s}`,said:(A,s)=>`${A} faz ${s}.`,q:(a,pl)=>`Onde ${pl?'estão':'está'} ${a}?`,
+      qL:L=>`Onde está a letra ${L}?`,qN:n=>`Onde está o número ${n}?`,qC:c=>`Onde está a cor ${c}?`,letter:(L,w)=>`${L} de ${w}`},
+  en:{learn:'Learn',quiz:'Challenge',again:'Listen again',hearQ:'Hear the question',tap:'Tap a key',
+      says:'The book says the name for you.',music:'Each key plays a note and says its name.',tapRight:'Tap the right key.',
+      good:'Well done!',retry:'Try again.',num:'Number',color:'Color',shape:'Shape',note:'Musical note',
+      sound:s=>`Says ${s}`,said:(A,s)=>`${A} says ${s}.`,q:(a,pl)=>`Where ${pl?'are':'is'} ${a}?`,
+      qL:L=>`Where is the letter ${L}?`,qN:n=>`Where is number ${n}?`,qC:c=>`Where is the color ${c}?`,letter:(L,w)=>`${L} is for ${w}`},
+  es:{learn:'Aprender',quiz:'Desafío',again:'Escuchar otra vez',hearQ:'Escuchar la pregunta',tap:'Toca una tecla',
+      says:'El libro te dice el nombre.',music:'Cada tecla toca una nota y dice su nombre.',tapRight:'Toca la tecla correcta.',
+      good:'¡Muy bien!',retry:'Inténtalo otra vez.',num:'Número',color:'Color',shape:'Forma',note:'Nota musical',
+      sound:s=>`Hace ${s}`,said:(A,s)=>`${A} hace ${s}.`,q:(a,pl)=>`¿Dónde ${pl?'están':'está'} ${a}?`,
+      qL:L=>`¿Dónde está la letra ${L}?`,qN:n=>`¿Dónde está el número ${n}?`,qC:c=>`¿Dónde está el color ${c}?`,letter:(L,w)=>`${L} de ${w}`},
+  it:{learn:'Impara',quiz:'Sfida',again:'Ascolta ancora',hearQ:'Ascolta la domanda',tap:'Tocca un tasto',
+      says:'Il libro ti dice il nome.',music:'Ogni tasto suona una nota e dice il suo nome.',tapRight:'Tocca il tasto giusto.',
+      good:'Bravo!',retry:'Riprova.',num:'Numero',color:'Colore',shape:'Forma',note:'Nota musicale',
+      sound:s=>`Fa ${s}`,said:(A,s)=>`${A} fa ${s}.`,q:(a,pl)=>`${pl?'Dove sono':"Dov'è"} ${a}?`,
+      qL:L=>`Dov'è la lettera ${L}?`,qN:n=>`Dov'è il numero ${n}?`,qC:c=>`Dov'è il colore ${c}?`,letter:(L,w)=>`${L} come ${w}`}
+};
+
+/* ---------- Conteúdo do livro ---------- */
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+/* "o cachorro", "l'elefante", "las uvas*" (asterisco = plural) */
+function noun(s){
+  const pl=s.endsWith('*');s=s.replace('*','');
+  const name=cap(s.replace(/^(l'|(o|a|os|as|the|el|la|los|las|il|lo|i|gli|le)\s+)/i,''));
+  return {name,art:s,A:cap(s),pl};
+}
+
+/* Letras: cada idioma tem a sua palavra; o espanhol tem também o Ñ */
+const LW={
+  pt:'A Abelha 🐝|B Bola ⚽|C Casa 🏠|D Dado 🎲|E Elefante 🐘|F Flor 🌸|G Gato 🐱|H Hipopótamo 🦛|I Ilha 🏝️|J Jacaré 🐊|K Kiwi 🥝|L Leão 🦁|M Macaco 🐒|N Navio 🚢|O Ovo 🥚|P Pato 🦆|Q Queijo 🧀|R Rato 🐭|S Sapo 🐸|T Tartaruga 🐢|U Uva 🍇|V Vaca 🐄|W Waffle 🧇|X Xícara ☕|Y Yoga 🧘|Z Zebra 🦓',
+  en:'A Apple 🍎|B Ball ⚽|C Cat 🐱|D Dog 🐶|E Elephant 🐘|F Fish 🐟|G Grapes 🍇|H House 🏠|I Ice cream 🍦|J Juice 🧃|K Kite 🪁|L Lion 🦁|M Monkey 🐒|N Nose 👃|O Orange 🍊|P Pig 🐷|Q Queen 👑|R Rabbit 🐰|S Sun ☀️|T Turtle 🐢|U Umbrella ☂️|V Violin 🎻|W Whale 🐳|X Xylophone 🎶|Y Yo-yo 🪀|Z Zebra 🦓',
+  es:'A Abeja 🐝|B Ballena 🐳|C Casa 🏠|D Dado 🎲|E Elefante 🐘|F Flor 🌸|G Gato 🐱|H Helado 🍦|I Isla 🏝️|J Jirafa 🦒|K Kiwi 🥝|L León 🦁|M Mono 🐒|N Nube ☁️|Ñ Ñandú 🐦|O Oso 🐻|P Pato 🦆|Q Queso 🧀|R Ratón 🐭|S Sol ☀️|T Tortuga 🐢|U Uvas 🍇|V Vaca 🐄|W Wafle 🧇|X Xilófono 🎶|Y Yoyó 🪀|Z Zorro 🦊',
+  it:'A Ape 🐝|B Balena 🐳|C Casa 🏠|D Dado 🎲|E Elefante 🐘|F Fiore 🌸|G Gatto 🐱|H Hotel 🏨|I Isola 🏝️|J Jeans 👖|K Koala 🐨|L Leone 🦁|M Mela 🍎|N Nave 🚢|O Orso 🐻|P Pesce 🐟|Q Quadro 🖼️|R Rana 🐸|S Sole ☀️|T Tartaruga 🐢|U Uva 🍇|V Vaso 🏺|W Wafer 🧇|X Xilofono 🎶|Y Yogurt 🥛|Z Zebra 🦓'
+};
+const LMAP={};
+LK.forEach(l=>LW[l].split('|').forEach(row=>{
+  const p=row.split(' ');const L=p[0],e=p[p.length-1],w=p.slice(1,-1).join(' ');
+  (LMAP[L]=LMAP[L]||{})[l]={w,e};
+}));
+const ORDER='ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
+const letters=ORDER.filter(L=>LMAP[L]).map(L=>{
+  const it={kind:'text',g:L};
+  LK.forEach(l=>{const d=LMAP[L][l];if(!d)return;const t=UI[l].letter(L,d.w);
+    it[l]={name:L,line:`${t} ${d.e}`,say:t+'.',q:UI[l].qL(L),chip:`${d.w} ${d.e}`};});
+  return it;
+});
+
+const NUM={
+  pt:'zero um dois três quatro cinco seis sete oito nove dez onze doze treze catorze quinze dezesseis dezessete dezoito dezenove vinte',
+  en:'zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty',
+  es:'cero uno dos tres cuatro cinco seis siete ocho nueve diez once doce trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte',
+  it:'zero uno due tre quattro cinque sei sette otto nove dieci undici dodici tredici quattordici quindici sedici diciassette diciotto diciannove venti'
+};
+const numbers=Array.from({length:21},(_,i)=>{
+  const it={kind:'text',g:String(i),dots:i>0&&i<=10?i:0};
+  LK.forEach(l=>{const w=NUM[l].split(' ')[i];it[l]={name:w,line:`${UI[l].num} ${i}`,say:w,q:UI[l].qN(w)};});
+  return it;
+});
+
+const colors=[
+ ['#E53935','Vermelho','Red','Rojo','Rosso'],['#1E66F5','Azul','Blue','Azul','Blu'],['#FFD21F','Amarelo','Yellow','Amarillo','Giallo'],
+ ['#22A565','Verde','Green','Verde','Verde'],['#FF8A1F','Laranja','Orange','Naranja','Arancione'],['#8E44EC','Roxo','Purple','Morado','Viola'],
+ ['#FF6FB5','Rosa','Pink','Rosa','Rosa'],['#8B5A2B','Marrom','Brown','Marrón','Marrone'],['#111111','Preto','Black','Negro','Nero'],
+ ['#FFFFFF','Branco','White','Blanco','Bianco'],['#9AA3B2','Cinza','Gray','Gris','Grigio']
+].map(r=>{const it={kind:'color',g:r[0]};
+  LK.forEach((l,i)=>{const c=r[i+1];it[l]={name:c,line:UI[l].color,say:c,q:UI[l].qC(c.toLowerCase())};});return it;});
+
+const S=(inner,fill)=>`<svg class="g-shape" viewBox="0 0 100 100" fill="${fill}" aria-hidden="true">${inner}</svg>`;
+const shapes=[
+ [S('<circle cx="50" cy="50" r="42"/>','#E53935'),'o círculo','the circle','el círculo','il cerchio'],
+ [S('<rect x="10" y="10" width="80" height="80" rx="6"/>','#1E66F5'),'o quadrado','the square','el cuadrado','il quadrato'],
+ [S('<polygon points="50,8 94,90 6,90"/>','#22A565'),'o triângulo','the triangle','el triángulo','il triangolo'],
+ [S('<rect x="4" y="24" width="92" height="52" rx="6"/>','#FF8A1F'),'o retângulo','the rectangle','el rectángulo','il rettangolo'],
+ [S('<polygon points="50,5 61,38 96,38 68,59 79,93 50,72 21,93 32,59 4,38 39,38"/>','#F5B400'),'a estrela','the star','la estrella','la stella'],
+ [S('<path d="M50 88C10 60 4 36 18 22C30 10 46 16 50 28C54 16 70 10 82 22C96 36 90 60 50 88Z"/>','#FF4F8B'),'o coração','the heart','el corazón','il cuore'],
+ [S('<polygon points="50,5 92,50 50,95 8,50"/>','#8E44EC'),'o losango','the diamond','el rombo','il rombo'],
+ [S('<ellipse cx="50" cy="50" rx="46" ry="30"/>','#17A2B8'),'o oval','the oval','el óvalo',"l'ovale"]
+].map(r=>{const it={kind:'shape',g:r[0]};
+  LK.forEach((l,i)=>{const n=noun(r[i+1]);it[l]={name:n.name,line:UI[l].shape,say:n.name,q:UI[l].q(n.art,n.pl)};});return it;});
+
+/* Animais e frutas: [emoji, pt, en, es, it, sons opcionais] */
+function emojiItems(rows){
+  return rows.map(r=>{const it={kind:'emoji',g:r[0]};
+    LK.forEach((l,i)=>{const n=noun(r[i+1]);const s=r[5]&&r[5][i];
+      it[l]={name:n.name,line:s?UI[l].sound(s):'',say:s?UI[l].said(n.A,s):n.name,q:UI[l].q(n.art,n.pl)};});
+    return it;});
+}
+const animals=emojiItems([
+ ['🐶','o cachorro','the dog','el perro','il cane',['au au','woof woof','guau guau','bau bau']],
+ ['🐱','o gato','the cat','el gato','il gatto',['miau','meow','miau','miao']],
+ ['🐄','a vaca','the cow','la vaca','la mucca',['muuu','moo','muuu','muuu']],
+ ['🐷','o porco','the pig','el cerdo','il maiale',['óinc óinc','oink oink','oinc oinc','oink oink']],
+ ['🐴','o cavalo','the horse','el caballo','il cavallo',['iiirrí','neigh','jiiii','hiii']],
+ ['🐑','a ovelha','the sheep','la oveja','la pecora',['mééé','baa','beee','beee']],
+ ['🐔','a galinha','the chicken','la gallina','la gallina',['có có có','cluck cluck','co co co','coccodè']],
+ ['🦆','o pato','the duck','el pato',"l'anatra",['quá quá','quack quack','cuac cuac','qua qua']],
+ ['🦁','o leão','the lion','el león','il leone',['roar','roar','grrr','grrr']],
+ ['🐸','o sapo','the frog','la rana','la rana',['croac croac','ribbit','croac croac','cra cra']],
+ ['🐘','o elefante','the elephant','el elefante',"l'elefante"],
+ ['🐒','o macaco','the monkey','el mono','la scimmia'],
+ ['🦒','a girafa','the giraffe','la jirafa','la giraffa'],
+ ['🐟','o peixe','the fish','el pez','il pesce'],
+ ['🦋','a borboleta','the butterfly','la mariposa','la farfalla'],
+ ['🐢','a tartaruga','the turtle','la tortuga','la tartaruga']
+]);
+const fruits=emojiItems([
+ ['🍎','a maçã','the apple','la manzana','la mela'],
+ ['🍌','a banana','the banana','el plátano','la banana'],
+ ['🍊','a laranja','the orange','la naranja',"l'arancia"],
+ ['🍇','a uva','the grapes*','las uvas*',"l'uva"],
+ ['🍓','o morango','the strawberry','la fresa','la fragola'],
+ ['🍉','a melancia','the watermelon','la sandía',"l'anguria"],
+ ['🍍','o abacaxi','the pineapple','la piña',"l'ananas"],
+ ['🍐','a pera','the pear','la pera','la pera'],
+ ['🥭','a manga','the mango','el mango','il mango'],
+ ['🍋','o limão','the lemon','el limón','il limone'],
+ ['🥥','o coco','the coconut','el coco','il cocco'],
+ ['🥑','o abacate','the avocado','el aguacate',"l'avocado"],
+ ['🍑','o pêssego','the peach','el melocotón','la pesca'],
+ ['🍒','a cereja','the cherry','la cereza','la ciliegia'],
+ ['🥝','o kiwi','the kiwi','el kiwi','il kiwi'],
+ ['🍈','o melão','the melon','el melón','il melone']
+]);
+const NOTES={pt:'Dó Ré Mi Fá Sol Lá Si Dó',en:'C D E F G A B C',es:'Do Re Mi Fa Sol La Si Do',it:'Do Re Mi Fa Sol La Si Do'};
+const notes=[[261.63,'#E53935'],[293.66,'#FF8A1F'],[329.63,'#F5B400'],[349.23,'#22A565'],[392,'#17A2B8'],[440,'#1E66F5'],[493.88,'#8E44EC'],[523.25,'#FF4F8B']]
+ .map(([f,c],i)=>{const it={kind:'note',g:'🎵',freq:f,color:c};
+   LK.forEach(l=>{const n=NOTES[l].split(' ')[i];it[l]={name:n,line:UI[l].note,say:n};});return it;});
+
+const CATS=[
+ {id:'letras',icon:'Abc',t:{pt:'Letras',en:'Letters',es:'Letras',it:'Lettere'},c:'#3D7BFF',d:'#2A58C2',items:letters},
+ {id:'numeros',icon:'123',t:{pt:'Números',en:'Numbers',es:'Números',it:'Numeri'},c:'#FF5A4E',d:'#C23A30',items:numbers},
+ {id:'cores',icon:'●',t:{pt:'Cores',en:'Colors',es:'Colores',it:'Colori'},c:'#8E44EC',d:'#6328B5',items:colors},
+ {id:'formas',icon:'▲',t:{pt:'Formas',en:'Shapes',es:'Formas',it:'Forme'},c:'#17A2B8',d:'#0E7485',items:shapes},
+ {id:'animais',icon:'🐶',t:{pt:'Animais',en:'Animals',es:'Animales',it:'Animali'},c:'#22A565',d:'#167A49',items:animals},
+ {id:'frutas',icon:'🍎',t:{pt:'Frutas',en:'Fruits',es:'Frutas',it:'Frutta'},c:'#FF8A1F',d:'#C2620A',items:fruits},
+ {id:'musica',icon:'♪',t:{pt:'Música',en:'Music',es:'Música',it:'Musica'},c:'#FF4F8B',d:'#C22F63',items:notes}
+];
+
+/* ---------- Estado ---------- */
+const $=id=>document.getElementById(id);
+let lang='pt',mode='learn',cat=CATS[0],visible=[],current=null,target=null,stars=0,locked=false;
+try{const l=localStorage.getItem('lf-lang');if(LANGS[l])lang=l;}catch(e){}
+
+/* ---------- Voz e sons ---------- */
+const synth=window.speechSynthesis;
+let voices=[];
+const normLang=v=>v.lang.replace('_','-').toLowerCase();
+/* Vozes do idioma, da melhor para a pior: "Natural"/online primeiro, depois a região padrão */
+function voicesOf(l){
+  const full=LANGS[l].code.toLowerCase();
+  const score=v=>(/natural|neural|online/i.test(v.name)?4:0)+(normLang(v)===full?2:0)+(v.localService?0:1);
+  return voices.filter(v=>normLang(v).split('-')[0]===l).sort((a,b)=>score(b)-score(a));
+}
+function voiceFor(l){
+  const list=voicesOf(l);
+  let saved=null;try{saved=localStorage.getItem('lf-voice-'+l);}catch(e){}
+  return list.find(v=>v.name===saved)||list[0]||null;
+}
+const voiceLabel=v=>v.name.replace(/^Microsoft\s+/,'').replace(/\s+-\s+.*$/,'')+' ('+v.lang+')'+(v.localService?'':' · online');
+function renderVoices(){
+  const sel=$('voice'),list=voicesOf(lang);
+  sel.textContent='';
+  list.forEach(v=>{const o=document.createElement('option');o.value=v.name;o.textContent=voiceLabel(v);sel.appendChild(o);});
+  const cur=voiceFor(lang);if(cur)sel.value=cur.name;
+  sel.hidden=list.length<2;
+}
+function checkVoice(){
+  const n=$('notice');
+  if(!synth){n.hidden=false;n.textContent='Este navegador não tem voz. Abra o Kidoria ABC no Chrome, Edge ou Safari para ouvir os nomes.';return;}
+  if(voices.length&&!voiceFor(lang)){
+    n.hidden=false;
+    n.textContent=`Não encontrei voz em ${LANGS[lang].name} neste navegador/app. Se você acabou de instalar, feche e abra de novo. Ou abra o Kidoria ABC no Edge ou no Chrome.`;
+  }else n.hidden=true;
+}
+const loadVoices=()=>{try{voices=synth?synth.getVoices():[];}catch(e){voices=[];}checkVoice();renderVoices();};
+if(synth){loadVoices();try{synth.addEventListener('voiceschanged',loadVoices);}catch(e){}}
+
+/* Ajustes só no áudio (a tela não muda):
+   PT: a letra E sozinha seria lida como "i"; vira "êh" (som fechado "ê").
+   ES: a letra Y sozinha seria lida como "i"; vira "ye". */
+function fixSpeech(t,l){
+  if(l==='pt')t=t.replace(/(^|\s)E(?=[\s?.!,]|$)/g,'$1êh');
+  if(l==='es')t=t.replace(/(^|\s)Y(?=[\s?.!,]|$)/g,'$1ye');
+  return t;
+}
+function speak(text,l=lang){
+  if(!synth||!text)return;
+  const v=voiceFor(l);
+  /* Sem voz do idioma, não fala: uma voz de outro idioma lendo espanhol ou italiano sai errada */
+  if(!v&&voices.length){checkVoice();return;}
+  try{
+    synth.cancel();
+    const u=new SpeechSynthesisUtterance(fixSpeech(text,l));
+    u.lang=v?v.lang:LANGS[l].code;
+    if(v)u.voice=v;
+    const kid=(l==='pt'||l==='en');
+    u.rate=kid?.85:.9;u.pitch=kid?1.15:1;
+    synth.speak(u);
+  }catch(e){}
+}
+let ctx=null;
+function tone(freq,dur=.5,type='triangle',when=0,vol=.25){
+  try{
+    ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
+    if(ctx.state==='suspended')ctx.resume();
+    const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+when;
+    o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.connect(g).connect(ctx.destination);o.start(t);o.stop(t+dur+.05);
+  }catch(e){}
+}
+const chime=()=>{tone(523.25,.18,'sine',0);tone(659.25,.18,'sine',.12);tone(783.99,.35,'sine',.24);};
+const buzz=()=>tone(160,.25,'sawtooth',0,.12);
+/* Nota musical: toca o som e logo depois a voz diz o nome (Dó, Ré, Mi...) */
+let noteTimer=null;
+function playNote(it,l=lang){
+  clearTimeout(noteTimer);
+  try{synth&&synth.cancel();}catch(e){}
+  tone(it.freq,.9);
+  noteTimer=setTimeout(()=>speak(it[l].say,l),650);
+}
+
+/* ---------- Desenho ---------- */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function glyphHTML(it){
+  if(it.kind==='text')return `<span class="g-text">${it.g}</span>`;
+  if(it.kind==='color')return `<span class="g-color" style="background:${it.g}"></span>`;
+  if(it.kind==='shape')return it.g;
+  return `<span class="g-emoji">${it.g}</span>`;
+}
+function renderLangs(){
+  $('langs').innerHTML=LK.map(l=>`<button data-l="${l}" aria-pressed="${l===lang}" title="${LANGS[l].name}" aria-label="${LANGS[l].name}">${LANGS[l].short}</button>`).join('');
+}
+function renderTabs(){
+  $('tabs').innerHTML=CATS.map(c=>`<button class="tab" role="tab" data-id="${c.id}" aria-selected="${c===cat}" style="--tc:${c.c}"><b>${c.icon}</b>${c.t[lang]}</button>`).join('');
+}
+function renderKeys(){
+  const app=$('app');
+  app.style.setProperty('--cat',cat.c);app.style.setProperty('--cat-dark',cat.d);
+  app.classList.toggle('quiz',mode==='quiz');
+  visible=cat.items.filter(it=>it[lang]);
+  $('keys').innerHTML=visible.map((it,i)=>{
+    const nm=esc(it[lang].name);
+    if(it.kind==='note')return `<button class="key note" data-i="${i}" style="--nc:${it.color}" aria-label="${nm}"><span class="g-emoji">🎵</span><small>${nm}</small></button>`;
+    const dots=it.dots?`<span class="dots">${'★'.repeat(it.dots)}</span>`:'';
+    return `<button class="key" data-i="${i}" aria-label="${nm}">${glyphHTML(it)}${dots}<small>${nm}</small></button>`;
+  }).join('');
+  $('keys').scrollTop=0;
+}
+function renderChips(it){
+  const box=$('chips');
+  const others=it?LK.filter(l=>l!==lang&&it[l]):[];
+  box.innerHTML=others.map(l=>`<button class="chip" data-l="${l}" aria-label="${LANGS[l].name}: ${esc(it[l].chip||it[l].name)}"><b>${LANGS[l].short}</b>${esc(it[l].chip||it[l].name)}</button>`).join('');
+  box.hidden=!others.length;
+}
+function showItem(it,hint){
+  current=it;
+  const g=$('glyph');g.innerHTML=glyphHTML(it);g.classList.remove('pop');void g.offsetWidth;g.classList.add('pop');
+  $('hint').textContent=hint||cat.t[lang];
+  $('name').textContent=it[lang].name;
+  $('line').textContent=it[lang].line||'';
+  $('again').hidden=false;$('again').textContent=UI[lang].again;
+  renderChips(it);
+}
+function showPrompt(){
+  $('glyph').innerHTML='<span class="g-text">?</span>';
+  $('hint').textContent=UI[lang].quiz;
+  $('name').textContent=target[lang].q;
+  $('line').textContent=UI[lang].tapRight;
+  $('again').hidden=false;$('again').textContent=UI[lang].hearQ;
+  renderChips(null);
+}
+function welcome(){
+  current=null;
+  $('glyph').innerHTML=`<span class="g-text">${cat.icon}</span>`;
+  $('hint').textContent=cat.t[lang];
+  $('name').textContent=UI[lang].tap;
+  $('line').textContent=cat.id==='musica'?UI[lang].music:UI[lang].says;
+  $('again').hidden=true;renderChips(null);
+}
+function newRound(say=true){
+  const pool=visible.filter(i=>i!==target);
+  target=pool[Math.floor(Math.random()*pool.length)];
+  locked=false;showPrompt();
+  document.querySelectorAll('.key.right').forEach(k=>k.classList.remove('right'));
+  if(say)speak(target[lang].q);
+}
+function refresh(say=false){
+  if(cat.id==='musica'&&mode==='quiz')mode='learn';
+  document.documentElement.lang=LANGS[lang].code;
+  renderLangs();renderVoices();
+  $('mode-learn').setAttribute('aria-pressed',mode==='learn');$('mode-quiz').setAttribute('aria-pressed',mode==='quiz');
+  $('mode-learn').textContent=UI[lang].learn;$('mode-quiz').textContent=UI[lang].quiz;
+  $('mode-quiz').disabled=cat.id==='musica';$('mode-quiz').style.opacity=cat.id==='musica'?.4:1;
+  $('stars').hidden=mode!=='quiz';$('stars').textContent='★ '+stars;
+  renderTabs();renderKeys();
+  if(mode==='quiz')newRound(say);else welcome();
+}
+
+/* ---------- Eventos ---------- */
+$('keys').addEventListener('click',e=>{
+  const k=e.target.closest('.key');if(!k)return;
+  const it=visible[+k.dataset.i];
+  if(it.kind==='note'){showItem(it);playNote(it);return;}
+  if(mode==='learn'){showItem(it);speak(it[lang].say);return;}
+  if(locked)return;
+  if(it===target){
+    locked=true;k.classList.add('right');stars++;$('stars').textContent='★ '+stars;chime();
+    showItem(it,UI[lang].good);$('again').hidden=true;renderChips(null);
+    setTimeout(()=>speak(UI[lang].good+' '+it[lang].name),350);
+    setTimeout(()=>{if(mode==='quiz')newRound();},2600);
+  }else{
+    buzz();k.classList.remove('wrong');void k.offsetWidth;k.classList.add('wrong');
+    setTimeout(()=>speak(UI[lang].retry+' '+target[lang].q),250);
+  }
+});
+$('tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab');if(!t)return;
+  cat=CATS.find(c=>c.id===t.dataset.id);target=null;
+  if(mode==='learn')speak(cat.t[lang]);
+  refresh(true);
+});
+$('again').addEventListener('click',()=>{
+  if(mode==='quiz'&&target&&!locked)speak(target[lang].q);
+  else if(current&&current.kind==='note')playNote(current);
+  else if(current)speak(current[lang].say);
+});
+$('chips').addEventListener('click',e=>{
+  const c=e.target.closest('.chip');if(!c||!current)return;
+  const l=c.dataset.l;
+  if(current.kind==='note')playNote(current,l);else speak(current[l].say,l);
+});
+$('langs').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  lang=b.dataset.l;try{localStorage.setItem('lf-lang',lang);}catch(err){}
+  target=null;speak(LANGS[lang].name,lang);checkVoice();refresh(false);
+  if(mode==='quiz')setTimeout(()=>speak(target[lang].q),900);
+});
+$('voice').addEventListener('change',e=>{
+  try{localStorage.setItem('lf-voice-'+lang,e.target.value);}catch(err){}
+  speak(LANGS[lang].hi,lang);
+});
+$('mode-learn').addEventListener('click',()=>{mode='learn';target=null;refresh();});
+$('mode-quiz').addEventListener('click',()=>{if(cat.id==='musica')return;mode='quiz';refresh(true);});
+
+/* ---------- Início ---------- */
+refresh();
+checkVoice();
+</script>
+</body>
+</html>
