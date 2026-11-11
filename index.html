@@ -66,7 +66,7 @@ h1,h2,h3{font-family:var(--titulo);line-height:1.08;color:var(--noite);font-weig
   linear-gradient(180deg,#BFE0FF 0%,#E4F2FF 55%,var(--creme) 100%);overflow:hidden}
 .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 18px;font-weight:800;font-size:.95rem;color:var(--roxo);box-shadow:var(--sombra)}
-.hero h1{font-size:clamp(2.6rem,6vw,4.7rem);margin:18px 0 20px}
+.hero h1{font-size:clamp(2.3rem,6vw,4.7rem);margin:18px 0 20px;line-height:1.08;text-wrap:balance}
 .hero h1 .col span:nth-child(7n+1){color:var(--ceu)}
 .hero h1 .col span:nth-child(7n+2){color:var(--rosa)}
 .hero h1 .col span:nth-child(7n+3){color:var(--laranja)}
@@ -196,6 +196,9 @@ footer{background:var(--noite);color:#B9B9E6;padding:44px 0;font-size:.95rem}
 @media (max-width:980px){
   .hero-grid,.world-grid,.eco-box{grid-template-columns:1fr}
   .hero{padding-top:112px}
+  .hero-grid>div:first-child{text-align:center}
+  .hero .lead{margin-left:auto;margin-right:auto;max-width:34em;text-wrap:balance}
+  .hero .cta-row,.hero .chips{justify-content:center}
   .hero-art{max-width:640px;margin:20px auto 0}
   .tiles{grid-template-columns:repeat(2,1fr)}
   .steps,.cards{grid-template-columns:1fr}
@@ -264,7 +267,7 @@ footer{background:var(--noite);color:#B9B9E6;padding:44px 0;font-size:.95rem}
   <div class="wrap hero-grid">
     <div>
       <span class="eyebrow">⭐ Para crianças de 3 a 8 anos</span>
-      <h1>Aprender o ABC virou uma <span class="col" aria-label="aventura"><span aria-hidden="true">a</span><span aria-hidden="true">v</span><span aria-hidden="true">e</span><span aria-hidden="true">n</span><span aria-hidden="true">t</span><span aria-hidden="true">u</span><span aria-hidden="true">r</span><span aria-hidden="true">a</span></span>!</h1>
+      <h1>Aprender o ABC virou uma <span class="col" aria-label="aventura"><span aria-hidden="true">a</span><span aria-hidden="true">v</span><span aria-hidden="true">e</span><span aria-hidden="true">n</span><span aria-hidden="true">t</span><span aria-hidden="true">u</span><span aria-hidden="true">r</span><span aria-hidden="true">a</span>!</span></h1>
       <p class="lead">Um livro que fala! Toque nas letras, números, cores, formas, animais e frutas e ouça tudo em voz alta.</p>
       <div class="cta-row">
         <a class="btn big" href="app/">Jogar agora ▶</a>
