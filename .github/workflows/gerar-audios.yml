@@ -5,7 +5,7 @@ on:
     inputs:
       idiomas:
         description: "Idiomas separados por vírgula (es, it, pt, en)"
-        default: "es,it"
+        default: "pt,en,es,it"
         required: true
       somente_estimar:
         description: "Só calcular o custo, sem gerar"

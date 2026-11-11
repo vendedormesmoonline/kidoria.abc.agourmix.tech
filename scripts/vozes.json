@@ -1,7 +1,19 @@
 {
   "_sobre": "Voz da ElevenLabs de cada idioma. Deixe voice_id vazio para o idioma continuar com a voz do aparelho.",
-  "es": { "voz": "Nancy Narradora Dulce", "voice_id": "qSd0nNFPQdeWlFXiPj2l" },
-  "it": { "voz": "Giulietta", "voice_id": "apHgRpkNENwMHJ2Ehz7x" },
-  "pt": { "voz": "", "voice_id": "" },
-  "en": { "voz": "", "voice_id": "" }
+  "es": {
+    "voz": "Nancy Narradora Dulce",
+    "voice_id": "qSd0nNFPQdeWlFXiPj2l"
+  },
+  "it": {
+    "voz": "Giulietta",
+    "voice_id": "apHgRpkNENwMHJ2Ehz7x"
+  },
+  "pt": {
+    "voz": "Juliana - Bright and Encouraging",
+    "voice_id": "nczLZ6GvJGozyc3FlLte"
+  },
+  "en": {
+    "voz": "Anna - Children's Book Narrator",
+    "voice_id": "Cx2PEJFdr8frSuUVB6yZ"
+  }
 }

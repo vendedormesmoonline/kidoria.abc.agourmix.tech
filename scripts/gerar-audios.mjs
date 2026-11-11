@@ -7,7 +7,7 @@ import vm from 'node:vm';
 
 const raiz = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i < 0 ? d : (process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : true); };
-const idiomas = String(arg('idiomas', 'es,it')).split(',').map(s => s.trim()).filter(Boolean);
+const idiomas = String(arg('idiomas', 'pt,en,es,it')).split(',').map(s => s.trim()).filter(Boolean);
 let modelo = String(arg('modelo', 'eleven_v4'));
 const estimar = !!arg('estimar', false);
 const vozes = JSON.parse(fs.readFileSync(path.join(raiz, 'scripts/vozes.json'), 'utf8'));
@@ -36,7 +36,7 @@ async function tts(voiceId, texto) {
     const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_64`, {
       method: 'POST',
       headers: { 'xi-api-key': chave, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-      body: JSON.stringify({ text: texto, model_id: modelo, voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true } })
+      body: JSON.stringify({ text: texto, model_id: modelo, voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true, speed: 0.9 } })
     });
     if (r.ok) return Buffer.from(await r.arrayBuffer());
     const corpo = (await r.text()).slice(0, 300);
