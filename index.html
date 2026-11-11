@@ -3,510 +3,533 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kidoria ABC</title>
-<link rel="icon" type="image/webp" href="logo.webp">
+<title>Kidoria ABC — Letras, números, cores e animais que falam | 3 a 8 anos</title>
+<meta name="description" content="Kidoria ABC é o livro falante digital para crianças de 3 a 8 anos: letras, números, cores, formas, animais, frutas e música, com voz em português, inglês, espanhol e italiano. Sem cadastro e sem anúncios.">
+<meta name="theme-color" content="#2B6BFF">
+<link rel="canonical" href="https://kidoria.abc.agourmix.tech/">
+<link rel="icon" type="image/png" href="assets/favicon-128.png">
+<link rel="apple-touch-icon" href="assets/icon-k-558.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Kidoria ABC — aprender o ABC virou uma aventura">
+<meta property="og:description" content="Letras, números, cores, formas, animais, frutas e música que falam — em 4 idiomas, para crianças de 3 a 8 anos.">
+<meta property="og:image" content="https://kidoria.abc.agourmix.tech/assets/hero-chars-1536.jpg">
+<meta property="og:url" content="https://kidoria.abc.agourmix.tech/">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Livro de cartão com botões de apertar: céu ao fundo, página branca, teclas com "altura" física */
-  --sky:#BEE5FF; --page:#FFFFFF; --ink:#1B2A5B; --ink-soft:#5A6790;
-  --sun:#FFC93C; --tomato:#FF5A4E; --leaf:#22A565; --line:#DCE6F5;
-  --cat:#3D7BFF; --cat-dark:#2A58C2;
-  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
-  --body:"Nunito","Trebuchet MS",system-ui,sans-serif;
-  color-scheme:light;
+  --ceu:#2B6BFF; --ceu-esc:#1747C9; --roxo:#7B4DFF; --rosa:#FF4F7B; --laranja:#FF9A3D;
+  --sol:#FFD23F; --verde:#2DBE7B; --noite:#1B1A4B; --texto:#2A2A55; --creme:#FFF8EC; --branco:#fff;
+  --r-lg:32px; --r-md:22px;
+  --sombra:0 18px 40px -18px rgba(27,26,75,.45);
+  --titulo:'Baloo 2','Nunito',ui-rounded,'Arial Rounded MT Bold',system-ui,sans-serif;
+  --corpo:'Nunito',ui-rounded,system-ui,-apple-system,'Segoe UI',sans-serif;
 }
-*{box-sizing:border-box;margin:0}
-html,body{height:100%}
-body{background:var(--sky);color:var(--ink);font-family:var(--body);font-weight:600;
-  -webkit-tap-highlight-color:transparent;overflow:hidden}
-button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation}
-button:focus-visible{outline:4px solid var(--ink);outline-offset:2px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:88px;-webkit-text-size-adjust:100%}
+body{font-family:var(--corpo);color:var(--texto);background:var(--creme);line-height:1.6;font-size:1.0625rem;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--titulo);line-height:1.08;color:var(--noite);font-weight:800}
+:focus-visible{outline:4px solid var(--sol);outline-offset:3px;border-radius:10px}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-60px;background:var(--noite);color:#fff;padding:10px 16px;border-radius:12px;z-index:2000;transition:top .2s}
+.skip:focus{top:12px}
 
-.app{height:100%;max-width:1180px;margin:0 auto;padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px}
+/* ---------- Header condicional ---------- */
+#siteHeader{position:fixed;inset:0 0 auto 0;z-index:900;background:rgba(255,255,255,.86);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);transform:translateY(0);transition:transform .3s ease,box-shadow .3s ease}
+#siteHeader.header-hidden{transform:translateY(-100%)}
+#siteHeader.header-scrolled{box-shadow:0 6px 24px -10px rgba(27,26,75,.35)}
+.bar{display:flex;align-items:center;gap:20px;height:76px}
+.bar .logo{height:52px;width:auto}
+.bar nav{margin-left:auto;display:flex;gap:4px}
+.bar nav a{font-weight:800;text-decoration:none;padding:9px 14px;border-radius:999px;color:var(--noite);font-size:.98rem;transition:background .2s,color .2s}
+.bar nav a:hover,.bar nav a.active{background:var(--noite);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--titulo);font-weight:800;font-size:1.15rem;text-decoration:none;border:0;cursor:pointer;border-radius:999px;padding:14px 28px;color:var(--noite);background:var(--sol);box-shadow:0 6px 0 #D9A400,0 16px 24px -10px rgba(217,164,0,.7);transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #D9A400}
+.btn.sec{background:#fff;box-shadow:0 6px 0 #C9D4F5,0 16px 24px -12px rgba(27,26,75,.4)}
+.btn.sec:active{box-shadow:0 2px 0 #C9D4F5}
+.btn.sm{padding:10px 20px;font-size:1rem;box-shadow:0 4px 0 #D9A400}
+.btn.big{font-size:1.4rem;padding:18px 38px}
+.menu-btn{display:none;margin-left:auto;width:48px;height:48px;border-radius:14px;border:0;background:var(--noite);color:#fff;font-size:1.5rem;cursor:pointer}
+.mobile-nav{display:none}
 
-/* Cabeçalho */
-.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
-.brand{font-family:var(--display);font-weight:800;font-size:1.6rem;line-height:1;margin-right:auto;display:flex;align-items:center;gap:8px}
-.brand .logo{height:52px;width:auto;display:block}
-.brand i{font-style:normal;background:var(--sun);border-radius:12px;padding:4px 8px;box-shadow:0 3px 0 #D9A416}
-.seg{display:flex;background:var(--page);border-radius:999px;padding:4px;gap:3px;box-shadow:0 3px 0 rgba(27,42,91,.15)}
-.seg button{padding:8px 12px;border-radius:999px;font-weight:800;font-size:.95rem;min-height:40px;min-width:44px;color:var(--ink-soft)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
-.stars{font-family:var(--display);font-weight:800;font-size:1.1rem;background:var(--sun);border-radius:999px;padding:6px 14px;box-shadow:0 3px 0 #D9A416}
-.stars[hidden]{display:none}
-.voice{max-width:200px;min-height:40px;border:0;border-radius:999px;padding:0 14px;background:var(--page);color:var(--ink);
-  font:inherit;font-weight:800;font-size:.9rem;box-shadow:0 3px 0 rgba(27,42,91,.15);cursor:pointer}
-.voice[hidden]{display:none}
+/* ---------- Hero ---------- */
+.hero{position:relative;padding:130px 0 90px;background:
+  radial-gradient(900px 500px at 85% 10%,rgba(255,210,63,.55),transparent 60%),
+  radial-gradient(800px 500px at 0% 30%,rgba(123,77,255,.28),transparent 60%),
+  linear-gradient(180deg,#BFE0FF 0%,#E4F2FF 55%,var(--creme) 100%);overflow:hidden}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.02fr 1fr;gap:48px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 18px;font-weight:800;font-size:.95rem;color:var(--roxo);box-shadow:var(--sombra)}
+.hero h1{font-size:clamp(2.6rem,6vw,4.7rem);margin:18px 0 20px}
+.hero h1 .col span:nth-child(7n+1){color:var(--ceu)}
+.hero h1 .col span:nth-child(7n+2){color:var(--rosa)}
+.hero h1 .col span:nth-child(7n+3){color:var(--laranja)}
+.hero h1 .col span:nth-child(7n+4){color:var(--roxo)}
+.hero h1 .col span:nth-child(7n+5){color:var(--verde)}
+.hero h1 .col span:nth-child(7n+6){color:var(--ceu)}
+.hero h1 .col span:nth-child(7n+7){color:var(--rosa)}
+.hero h1 .col{display:inline-block;white-space:nowrap}
+.hero h1 .col span{display:inline-block;animation:bob 3.2s ease-in-out infinite}
+.hero h1 .col span:nth-child(2n){animation-delay:.25s}.hero h1 .col span:nth-child(3n){animation-delay:.5s}
+.lead{font-size:1.25rem;max-width:34ch;color:#3A3A70}
+.cta-row{display:flex;flex-wrap:wrap;gap:16px;margin:30px 0 26px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none}
+.chips li{background:rgba(255,255,255,.9);border-radius:999px;padding:7px 15px;font-weight:800;font-size:.92rem;display:flex;gap:8px;align-items:center;box-shadow:0 6px 14px -8px rgba(27,26,75,.5)}
+.hero-art{position:relative}
+.frame{border-radius:var(--r-lg);overflow:hidden;border:8px solid #fff;box-shadow:0 30px 60px -24px rgba(27,26,75,.6);transform:rotate(1.6deg);background:#fff}
+.frame img{width:100%}
+.badge{position:absolute;display:grid;place-items:center;text-align:center;font-family:var(--titulo);font-weight:800;line-height:1.05;color:var(--noite);border-radius:50%;box-shadow:var(--sombra)}
+.badge.age{left:-26px;bottom:34px;width:118px;height:118px;background:var(--sol);font-size:1.6rem;transform:rotate(-10deg)}
+.badge.age small{display:block;font-size:.82rem}
+.badge.lang{right:-14px;top:-22px;width:104px;height:104px;background:var(--rosa);color:#fff;font-size:1.5rem;transform:rotate(8deg)}
+.badge.lang small{display:block;font-size:.78rem}
+.star{position:absolute;width:var(--s,46px);aspect-ratio:1;background:var(--sol);clip-path:polygon(50% 0,62% 36%,100% 38%,70% 60%,80% 100%,50% 76%,20% 100%,30% 60%,0 38%,38% 36%);filter:drop-shadow(0 6px 8px rgba(217,164,0,.5));animation:twinkle 3s ease-in-out infinite;pointer-events:none}
+.cloud{position:absolute;height:34px;width:120px;border-radius:40px;background:#fff;opacity:.9;filter:blur(.3px);animation:drift 26s linear infinite;pointer-events:none}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:52px;height:52px;left:18px;top:-24px}.cloud::after{width:40px;height:40px;right:20px;top:-16px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.18) rotate(10deg)}}
+@keyframes drift{from{transform:translateX(-180px)}to{transform:translateX(110vw)}}
 
-/* Abas de categoria, como o índice lateral de um livro */
-.tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:16px 16px 6px 6px;
-  background:var(--page);font-weight:800;min-height:46px;border-bottom:5px solid var(--tc);color:var(--ink)}
-.tab b{font-family:var(--display);font-size:1.15rem;color:var(--tc)}
-.tab[aria-selected="true"]{background:var(--tc);color:#fff}
-.tab[aria-selected="true"] b{color:#fff}
+/* ---------- Seções ---------- */
+section{position:relative}
+.sec{padding:96px 0}
+.head{text-align:center;max-width:720px;margin:0 auto 52px}
+.head .kicker{display:inline-block;font-family:var(--titulo);font-weight:800;color:var(--roxo);letter-spacing:.06em;text-transform:uppercase;font-size:.95rem;margin-bottom:8px}
+.head h2{font-size:clamp(2rem,4.6vw,3.3rem);margin-bottom:14px}
+.head p{font-size:1.15rem}
 
-/* O livro */
-.book{flex:1;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:10px}
-.page{background:var(--page);border-radius:24px;box-shadow:0 6px 0 rgba(27,42,91,.14)}
+/* Demo interativa */
+.demo{background:#fff;border-radius:48px 48px 0 0;margin-top:-30px;z-index:2;box-shadow:0 -20px 40px -30px rgba(27,26,75,.35)}
+.langbar{display:flex;justify-content:center;gap:8px;margin:0 auto 34px;flex-wrap:wrap}
+.langbar button{font-family:var(--titulo);font-weight:800;font-size:1.05rem;padding:10px 22px;border-radius:999px;border:3px solid var(--noite);background:#fff;color:var(--noite);cursor:pointer;transition:transform .15s,background .2s,color .2s}
+.langbar button[aria-pressed="true"]{background:var(--noite);color:#fff}
+.langbar button:hover{transform:translateY(-2px)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.tile{--bg:var(--ceu);--fg:#fff;position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:210px;padding:22px;border:0;border-radius:var(--r-md);background:var(--bg);color:var(--fg);text-align:left;cursor:pointer;font:inherit;box-shadow:0 8px 0 rgba(27,26,75,.22),0 22px 30px -18px rgba(27,26,75,.5);transition:transform .18s cubic-bezier(.3,1.6,.5,1),box-shadow .18s}
+.tile:hover{transform:translateY(-6px) rotate(-1deg)}
+.tile:active,.tile.say{transform:translateY(4px) scale(.98);box-shadow:0 3px 0 rgba(27,26,75,.22)}
+.tile .cat{font-family:var(--titulo);font-weight:800;font-size:1.35rem}
+.tile .glyph{font-size:3.4rem;line-height:1;filter:drop-shadow(0 4px 0 rgba(0,0,0,.15))}
+.tile .word{font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.tile .word::before{content:"🔊";font-size:1rem}
+.tile.wide{grid-column:span 2}
+.t-letras{--bg:var(--ceu)}.t-num{--bg:var(--rosa)}.t-cores{--bg:var(--laranja);--fg:var(--noite)}.t-formas{--bg:var(--roxo)}
+.t-animais{--bg:var(--sol);--fg:var(--noite)}.t-frutas{--bg:var(--verde);--fg:var(--noite)}.t-musica{--bg:var(--noite)}
+.hint{text-align:center;margin-top:26px;font-weight:700;color:#5A5A8A}
 
-.stage{display:flex;align-items:center;gap:14px;padding:12px 14px;border:4px solid var(--cat)}
-.glyph{flex:0 0 auto;width:104px;height:104px;border-radius:20px;background:color-mix(in srgb,var(--cat) 14%,#fff);
-  display:grid;place-items:center;overflow:hidden}
-.glyph.pop{animation:pop .35s ease}
-@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
-.info{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
-.hint{font-size:.85rem;font-weight:800;color:var(--cat-dark);text-transform:uppercase;letter-spacing:.04em}
-.name{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,6vw,3rem);line-height:1.05;overflow-wrap:anywhere}
-.line{font-size:1.05rem;color:var(--ink-soft)}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.pill{padding:8px 14px;border-radius:999px;font-weight:800;font-size:.95rem;min-height:42px;
-  background:var(--ink);color:#fff;box-shadow:0 3px 0 #0C1638}
-.pill:active,.chip:active{transform:translateY(3px);box-shadow:none}
-.pill[hidden],.chips[hidden]{display:none}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{display:flex;align-items:center;gap:6px;padding:6px 12px 6px 6px;border-radius:999px;min-height:40px;
-  background:var(--sun);font-weight:800;font-size:.92rem;box-shadow:0 3px 0 #D9A416}
-.chip b{font-size:.72rem;background:var(--ink);color:#fff;border-radius:999px;padding:3px 7px;letter-spacing:.04em}
+/* Como funciona */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;counter-reset:s}
+.step{background:#fff;border-radius:var(--r-lg);padding:34px 28px 30px;box-shadow:var(--sombra);position:relative;margin-top:26px}
+.step::before{counter-increment:s;content:counter(s);position:absolute;top:-26px;left:26px;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-family:var(--titulo);font-weight:800;font-size:1.7rem;color:#fff;background:var(--c,var(--ceu));box-shadow:0 6px 0 rgba(27,26,75,.2)}
+.step:nth-child(2){--c:var(--rosa)}.step:nth-child(3){--c:var(--verde)}
+.step h3{font-size:1.5rem;margin-bottom:8px}
 
-.keys{padding:14px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:12px;align-content:start}
-.key{aspect-ratio:1/1.08;border-radius:18px;background:color-mix(in srgb,var(--cat) 12%,#fff);
-  border:3px solid var(--cat);box-shadow:0 6px 0 var(--cat-dark);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;transition:transform .06s,box-shadow .06s}
-.key:active{transform:translateY(5px);box-shadow:0 1px 0 var(--cat-dark)}
-.key small{font-size:.74rem;font-weight:800;line-height:1.1;text-align:center;overflow-wrap:anywhere}
-.quiz .key small{visibility:hidden}
-.key.right{background:#D7F7E5;border-color:var(--leaf);box-shadow:0 6px 0 #167A49}
-.key.wrong{animation:shake .35s}
-@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
-.key.note{aspect-ratio:1/1.6;background:var(--nc);border-color:rgba(27,42,91,.25);box-shadow:0 6px 0 rgba(27,42,91,.35);color:#fff}
-.key.note small{font-size:1.2rem;font-family:var(--display)}
+/* Mundo (imagem larga) */
+.world{background:linear-gradient(180deg,var(--creme),#E8E2FF);overflow:hidden}
+.world-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:54px;align-items:center}
+.world h2{font-size:clamp(2rem,4.4vw,3.2rem);margin-bottom:16px}
+.world ul{list-style:none;margin-top:22px;display:grid;gap:14px}
+.world li{display:flex;gap:14px;align-items:flex-start;font-weight:700}
+.world li b{flex:none;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:var(--sol);color:var(--noite);font-family:var(--titulo)}
+.frame.b{transform:rotate(-1.6deg)}
 
-.g-text{font-family:var(--display);font-weight:800;line-height:1;color:var(--cat-dark);font-size:2.3rem}
-.g-emoji{font-size:2.3rem;line-height:1}
-.g-color{width:52%;aspect-ratio:1;border-radius:50%;border:3px solid rgba(27,42,91,.2)}
-.g-shape{width:56%;height:auto}
-.glyph .g-text{font-size:4rem}.glyph .g-emoji{font-size:3.8rem}
-.dots{font-size:.6rem;letter-spacing:1px;color:var(--sun);-webkit-text-stroke:.5px #B98A00;line-height:1;max-width:100%;text-align:center}
+/* Pais */
+.parents{background:var(--noite);color:#E6E6FF}
+.parents h2,.parents h3{color:#fff}
+.parents .head .kicker{color:var(--sol)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.14);border-radius:var(--r-md);padding:28px;transition:transform .2s,background .2s}
+.card:hover{transform:translateY(-5px);background:rgba(255,255,255,.12)}
+.card .ic{width:56px;height:56px;display:grid;place-items:center;border-radius:18px;font-size:1.7rem;margin-bottom:16px;background:var(--c,var(--sol))}
+.card:nth-child(2) .ic{--c:var(--rosa)}.card:nth-child(3) .ic{--c:var(--verde)}.card:nth-child(4) .ic{--c:var(--laranja)}.card:nth-child(5) .ic{--c:var(--ceu)}.card:nth-child(6) .ic{--c:var(--roxo)}
+.card h3{font-size:1.35rem;margin-bottom:8px}
+.tip{margin-top:40px;background:var(--sol);color:var(--noite);border-radius:var(--r-lg);padding:30px 34px;display:flex;gap:22px;align-items:center}
+.tip .big{font-size:3rem;flex:none}
+.tip h3{color:var(--noite);margin-bottom:4px}
 
-.notice{background:var(--tomato);color:#fff;border-radius:14px;padding:10px 14px;font-weight:800;font-size:.95rem}
-.notice[hidden]{display:none}
+/* Ecossistema */
+.eco{background:linear-gradient(180deg,#fff,#EAF3FF)}
+.eco-box{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;background:#fff;border-radius:var(--r-lg);padding:44px;box-shadow:var(--sombra);border:3px dashed #C9D4F5}
+.eco-logos{display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap}
+.eco-logos img.sw{width:min(380px,100%)}
+.eco-logos img.k{width:112px;border-radius:26px;box-shadow:var(--sombra)}
 
-@media (min-width:860px){
-  .book{grid-template-columns:minmax(300px,36%) 1fr;grid-template-rows:1fr}
-  .stage{flex-direction:column;justify-content:center;text-align:center;padding:24px}
-  .glyph{width:210px;height:210px;border-radius:32px}
-  .glyph .g-text{font-size:8rem}.glyph .g-emoji{font-size:7.5rem}
-  .info{flex:0 0 auto;align-items:center}
-  .actions,.chips{justify-content:center}
-  .keys{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:16px;padding:20px}
-  .g-text,.g-emoji{font-size:3rem}
-  .key small{font-size:.85rem}
-  .brand{font-size:2rem}
+/* FAQ */
+.faq{max-width:820px;margin:0 auto;display:grid;gap:14px}
+details{background:#fff;border-radius:var(--r-md);box-shadow:0 8px 20px -14px rgba(27,26,75,.5);border:2px solid #E3E8FA}
+summary{list-style:none;cursor:pointer;padding:20px 24px;font-family:var(--titulo);font-weight:800;font-size:1.2rem;color:var(--noite);display:flex;justify-content:space-between;gap:16px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";flex:none;width:36px;height:36px;border-radius:50%;background:var(--sol);display:grid;place-items:center;font-size:1.5rem;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 24px 22px}
+
+/* CTA final */
+.final .wrap{position:relative;z-index:1}
+.final{background:linear-gradient(135deg,var(--ceu),var(--roxo));color:#fff;text-align:center;overflow:hidden}
+.final h2{color:#fff;font-size:clamp(2.2rem,5.4vw,4rem);margin-bottom:14px}
+.final p{font-size:1.25rem;max-width:560px;margin:0 auto 32px;color:#EEF0FF}
+footer{background:var(--noite);color:#B9B9E6;padding:44px 0;font-size:.95rem}
+.foot{display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.foot img{height:44px;width:auto;background:#fff;border-radius:14px;padding:4px 12px}
+
+/* Scroll to top */
+#scrollTopBtn{position:fixed;right:20px;bottom:20px;width:54px;height:54px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;font-size:1.6rem;font-weight:800;z-index:1000;background:var(--rosa);color:#fff;box-shadow:0 5px 0 #C22A55,0 14px 22px -8px rgba(27,26,75,.6);opacity:0;visibility:hidden;transform:translateY(14px);transition:opacity .25s,transform .25s,visibility .25s}
+#scrollTopBtn.visible{opacity:1;visibility:visible;transform:none}
+#scrollTopBtn:active{transform:translateY(3px)}
+
+/* Revelar ao rolar */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- Responsivo ---------- */
+@media (max-width:980px){
+  .hero-grid,.world-grid,.eco-box{grid-template-columns:1fr}
+  .hero{padding-top:112px}
+  .hero-art{max-width:640px;margin:20px auto 0}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .steps,.cards{grid-template-columns:1fr}
+  .bar nav,.bar .btn.sm{display:none}
+  .menu-btn{display:block}
+  .mobile-nav{display:none;flex-direction:column;gap:6px;padding:0 0 18px}
+  .mobile-nav.open{display:flex}
+  .mobile-nav a{font-weight:800;text-decoration:none;padding:12px 16px;border-radius:14px;background:#fff;color:var(--noite)}
+  .mobile-nav a.go{background:var(--sol);text-align:center}
+  .sec{padding:72px 0}
 }
-@media (max-width:560px){.brand .logo{height:38px}.brand i{font-size:1rem;padding:3px 7px}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:520px){
+  .hero .star{opacity:.3}
+  body{font-size:1rem}
+  .tile{min-height:170px;padding:16px}
+  .tile .glyph{font-size:2.6rem}.tile .cat{font-size:1.1rem}.tile .word{font-size:.92rem}
+  .tile.wide{grid-column:span 2}
+  .badge.age{left:-6px;width:96px;height:96px;font-size:1.3rem}.badge.lang{right:-4px;width:86px;height:86px;font-size:1.2rem}
+  .btn.big{font-size:1.2rem;padding:16px 28px;width:100%}
+  .cta-row .btn{width:100%}
+  .tip{flex-direction:column;text-align:center}
+  .eco-box{padding:26px}
+  .bar .logo{height:44px}.bar{height:68px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <header class="top">
-    <div class="brand" role="img" aria-label="Kidoria ABC"><img class="logo" src="logo.webp" alt="Kidoria" width="164" height="56"><i>ABC</i></div>
-    <div class="stars" id="stars" hidden aria-live="polite">★ 0</div>
-    <div class="seg" role="group" aria-label="Idioma da voz" id="langs"></div>
-    <select class="voice" id="voice" aria-label="Escolher a voz" hidden></select>
-    <div class="seg" role="group" aria-label="Modo">
-      <button id="mode-learn" aria-pressed="true">Aprender</button>
-      <button id="mode-quiz" aria-pressed="false">Desafio</button>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <div class="bar">
+      <a href="#topo" data-anchor aria-label="Kidoria ABC — início"><img class="logo" src="assets/logo-820.webp" srcset="assets/logo-410.webp 1x, assets/logo-820.webp 2x" alt="Kidoria" width="170" height="52"></a>
+      <nav aria-label="Principal">
+        <a href="#descobrir" data-anchor>Descobrir</a>
+        <a href="#como" data-anchor>Como funciona</a>
+        <a href="#pais" data-anchor>Para os pais</a>
+        <a href="#faq" data-anchor>Dúvidas</a>
+      </nav>
+      <a class="btn sm" href="app/">Jogar agora ▶</a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menu">☰</button>
     </div>
-  </header>
+    <nav class="mobile-nav" id="mobileNav" aria-label="Menu móvel">
+      <a href="#descobrir" data-anchor>Descobrir</a>
+      <a href="#como" data-anchor>Como funciona</a>
+      <a href="#pais" data-anchor>Para os pais</a>
+      <a href="#faq" data-anchor>Dúvidas</a>
+      <a class="go" href="app/">Jogar agora ▶</a>
+    </nav>
+  </div>
+</header>
 
-  <div class="notice" id="notice" hidden></div>
-
-  <nav class="tabs" id="tabs" role="tablist" aria-label="Páginas do livro"></nav>
-
-  <main class="book">
-    <section class="page stage" aria-live="polite">
-      <div class="glyph" id="glyph"></div>
-      <div class="info">
-        <div class="hint" id="hint"></div>
-        <div class="name" id="name"></div>
-        <div class="line" id="line"></div>
-        <div class="actions">
-          <button class="pill" id="again">Ouvir de novo</button>
-        </div>
-        <div class="chips" id="chips" role="group" aria-label="Em outros idiomas" hidden></div>
+<main id="conteudo">
+<!-- HERO -->
+<section class="hero" id="topo">
+  <span class="cloud" style="top:16%;left:0;animation-duration:34s" aria-hidden="true"></span>
+  <span class="cloud" style="top:58%;left:0;animation-duration:48s;animation-delay:-20s;transform:scale(.7)" aria-hidden="true"></span>
+  <span class="star" style="--s:38px;left:4%;top:34%" aria-hidden="true"></span>
+  <span class="star" style="--s:26px;left:46%;top:14%;animation-delay:.8s" aria-hidden="true"></span>
+  <span class="star" style="--s:34px;right:6%;bottom:12%;animation-delay:1.4s" aria-hidden="true"></span>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">⭐ Para crianças de 3 a 8 anos</span>
+      <h1>Aprender o ABC virou uma <span class="col" aria-label="aventura"><span aria-hidden="true">a</span><span aria-hidden="true">v</span><span aria-hidden="true">e</span><span aria-hidden="true">n</span><span aria-hidden="true">t</span><span aria-hidden="true">u</span><span aria-hidden="true">r</span><span aria-hidden="true">a</span></span>!</h1>
+      <p class="lead">Um livro que fala! Toque nas letras, números, cores, formas, animais e frutas e ouça tudo em voz alta.</p>
+      <div class="cta-row">
+        <a class="btn big" href="app/">Jogar agora ▶</a>
+        <a class="btn sec big" href="#pais" data-anchor>Sou pai ou mãe</a>
       </div>
-    </section>
-    <section class="page keys" id="keys" aria-label="Teclas"></section>
-  </main>
-</div>
+      <ul class="chips" aria-label="Destaques">
+        <li>🚫 Sem anúncios</li><li>📝 Sem cadastro</li><li>🌎 4 idiomas</li><li>📱 Celular, tablet e PC</li>
+      </ul>
+    </div>
+    <div class="hero-art">
+      <div class="frame">
+        <img src="assets/hero-chars-1536.webp" srcset="assets/hero-chars-1536.webp 1536w, assets/hero-chars-3072.webp 3072w" sizes="(max-width:980px) 92vw, 560px" width="1536" height="1024" alt="Téo e seus amigos — um leão, uma coelhinha, um panda e um dragãozinho — diante do castelo colorido do Kidoria" fetchpriority="high">
+      </div>
+      <div class="badge lang" aria-hidden="true"><span>4<small>idiomas</small></span></div>
+      <div class="badge age" aria-hidden="true"><span>3–8<small>anos</small></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO INTERATIVA -->
+<section class="sec demo" id="descobrir">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">Experimente agora</span>
+      <h2>Toque e ouça!</h2>
+      <p>Escolha um idioma e toque em qualquer cartão. É assim que seu filho vai aprender dentro do app.</p>
+    </div>
+    <div class="langbar rv" role="group" aria-label="Idioma da voz" id="langbar">
+      <button data-l="pt" aria-pressed="true">Português</button>
+      <button data-l="en" aria-pressed="false">English</button>
+      <button data-l="es" aria-pressed="false">Español</button>
+      <button data-l="it" aria-pressed="false">Italiano</button>
+    </div>
+    <div class="tiles rv" id="tiles"></div>
+    <p class="hint" id="hint">🔊 Ligue o som do seu aparelho.</p>
+    <div style="text-align:center;margin-top:34px" class="rv"><a class="btn big" href="app/">Abrir o Kidoria ABC ▶</a></div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="sec" id="como">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">Simples como brincar</span>
+      <h2>Como funciona</h2>
+      <p>Nada para instalar, nenhuma conta para criar. Abriu, tocou, aprendeu.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv"><h3>Abra o livro</h3><p>Entre pelo botão “Jogar agora”, no celular, no tablet ou no computador. Funciona direto no navegador.</p></div>
+      <div class="step rv"><h3>Escolha o tema</h3><p>Letras, números, cores, formas, animais, frutas ou música. A criança vai pelo que mais gosta.</p></div>
+      <div class="step rv"><h3>Toque e ouça</h3><p>Cada toque vira uma voz que fala o nome e mostra a imagem. A repetição vira diversão.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MUNDO -->
+<section class="sec world">
+  <div class="wrap world-grid">
+    <div class="rv">
+      <span class="eyebrow" style="color:var(--rosa)">🌍 Um mundo para descobrir</span>
+      <h2 style="margin-top:14px">Sete temas, uma grande aventura</h2>
+      <p>O mundo do Kidoria cabe na palma da mão. A criança explora no seu ritmo, sem pressa e sem placar.</p>
+      <ul>
+        <li><b>A</b> Letras do alfabeto com som e imagem</li>
+        <li><b>1</b> Números para contar e reconhecer</li>
+        <li><b>🎨</b> Cores, formas, animais e frutas</li>
+        <li><b>♪</b> Notas musicais para ouvir e tocar</li>
+      </ul>
+    </div>
+    <div class="rv">
+      <div class="frame b">
+        <img src="assets/scene-globe-1402.webp" srcset="assets/scene-globe-1402.webp 1402w, assets/scene-globe-2804.webp 2804w" sizes="(max-width:980px) 92vw, 560px" width="1402" height="1122" alt="Crianças e um panda brincando ao redor de um globo mágico, cercados de livros e estrelas" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIS -->
+<section class="sec parents" id="pais">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">Para pais e responsáveis</span>
+      <h2>Tela com propósito, do jeito que você gosta</h2>
+      <p>O Kidoria ABC foi pensado para ser simples e seguro, para você deixar nas mãos do seu filho com tranquilidade.</p>
+    </div>
+    <div class="cards">
+      <article class="card rv"><div class="ic">🔊</div><h3>Aprende ouvindo e vendo</h3><p>Som, imagem e toque juntos ajudam a criança a ligar o nome à coisa e a repetir em voz alta.</p></article>
+      <article class="card rv"><div class="ic">🌎</div><h3>Quatro idiomas</h3><p>Português, inglês, espanhol e italiano. Um jeito leve de apresentar outras línguas desde cedo.</p></article>
+      <article class="card rv"><div class="ic">🚫</div><h3>Sem anúncios</h3><p>Nada de propagandas, links externos ou compras escondidas durante a brincadeira.</p></article>
+      <article class="card rv"><div class="ic">📝</div><h3>Sem cadastro</h3><p>Não pedimos nome, e-mail nem dados da criança. Só abrir e brincar.</p></article>
+      <article class="card rv"><div class="ic">📱</div><h3>Em qualquer tela</h3><p>Celular, tablet ou computador, direto no navegador, sem instalar nada.</p></article>
+      <article class="card rv"><div class="ic">🐢</div><h3>No ritmo da criança</h3><p>Sem tempo, sem pontos e sem pressão. Ela explora o que quiser, quantas vezes quiser.</p></article>
+    </div>
+    <div class="tip rv">
+      <div class="big">👨‍👩‍👧</div>
+      <div><h3>Dica: brinquem juntos</h3><p>Sentar ao lado, repetir as palavras e fazer perguntas (“que cor é essa?”) transforma o toque em conversa e fortalece o vínculo.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSSISTEMA -->
+<section class="sec eco">
+  <div class="wrap">
+    <div class="eco-box rv">
+      <div class="eco-logos">
+        <img class="sw" src="assets/logo-swoosh-992.webp" srcset="assets/logo-swoosh-496.webp 1x, assets/logo-swoosh-992.webp 2x" width="496" height="197" alt="Logomarca Kidoria sobre um livro aberto" loading="lazy">
+        <img class="k" src="assets/icon-k-558.webp" width="112" height="109" alt="Ícone do Kidoria, uma letra K azul com estrela dourada" loading="lazy">
+      </div>
+      <div>
+        <h2 style="font-size:clamp(1.8rem,3.6vw,2.6rem);margin-bottom:12px">Parte do ecossistema Kidoria</h2>
+        <p>O Kidoria ABC é o primeiro de uma família de apps e histórias para crianças aprenderem brincando. Muito mais vem por aí.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="head rv"><span class="kicker">Tire suas dúvidas</span><h2>Perguntas frequentes</h2></div>
+    <div class="faq">
+      <details class="rv"><summary>Para qual idade é indicado?</summary><p>Foi pensado para crianças de 3 a 8 anos. Os menores exploram os sons e as imagens; os maiores treinam letras, números e palavras novas.</p></details>
+      <details class="rv"><summary>Precisa instalar ou pagar alguma coisa?</summary><p>Não. O Kidoria ABC abre direto no navegador, sem instalação e sem cadastro.</p></details>
+      <details class="rv"><summary>A criança precisa saber ler?</summary><p>Não. Tudo funciona por toque, imagem e voz. Saber ler ajuda, mas não é necessário.</p></details>
+      <details class="rv"><summary>A voz não toca ou parece diferente. E agora?</summary><p>A voz vem do próprio aparelho, então pode variar entre celular, tablet e computador. Confira se o som está ligado. No app, você pode escolher outra voz disponível no aparelho.</p></details>
+      <details class="rv"><summary>Quais idiomas estão disponíveis?</summary><p>Português, inglês, espanhol e italiano. Basta trocar o idioma no topo do app.</p></details>
+      <details class="rv"><summary>Meus dados e os do meu filho estão seguros?</summary><p>O app não pede dados pessoais. A única coisa guardada, no próprio aparelho, é a preferência de idioma e de voz.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="sec final">
+  <span class="star" style="--s:44px;left:8%;top:22%" aria-hidden="true"></span>
+  <span class="star" style="--s:30px;right:10%;top:30%;animation-delay:.9s" aria-hidden="true"></span>
+  <div class="wrap">
+    <h2>Vamos começar a aventura?</h2>
+    <p>Em um toque seu filho já está no mundo do Kidoria, aprendendo e se divertindo.</p>
+    <a class="btn big" href="app/">Jogar agora ▶</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <img src="assets/logo-410.webp" alt="Kidoria" width="130" height="44" loading="lazy">
+    <p>© 2026 Kidoria ABC. Aprender brincando, em quatro idiomas.</p>
+  </div>
+</footer>
+
+<button id="scrollTopBtn" aria-label="Voltar ao topo" title="Voltar ao topo">↑</button>
 
 <script>
-/* ---------- Idiomas ---------- */
-const LANGS={
-  pt:{code:'pt-BR',short:'PT',name:'Português',hi:'Olá! Vamos aprender?'},
-  en:{code:'en-US',short:'EN',name:'English',hi:'Hello! Let us learn.'},
-  es:{code:'es-ES',short:'ES',name:'Español',hi:'¡Hola! ¿Vamos a aprender?'},
-  it:{code:'it-IT',short:'IT',name:'Italiano',hi:'Ciao! Impariamo insieme?'}
-};
-const LK=Object.keys(LANGS);
-const UI={
-  pt:{learn:'Aprender',quiz:'Desafio',again:'Ouvir de novo',hearQ:'Ouvir a pergunta',tap:'Toque em uma tecla',
-      says:'O livro fala o nome para você.',music:'Cada tecla toca uma nota e fala o nome dela.',tapRight:'Toque na tecla certa.',
-      good:'Muito bem!',retry:'Tente de novo.',num:'Número',color:'Cor',shape:'Forma',note:'Nota musical',
-      sound:s=>`Faz ${s}`,said:(A,s)=>`${A} faz ${s}.`,q:(a,pl)=>`Onde ${pl?'estão':'está'} ${a}?`,
-      qL:L=>`Onde está a letra ${L}?`,qN:n=>`Onde está o número ${n}?`,qC:c=>`Onde está a cor ${c}?`,letter:(L,w)=>`${L} de ${w}`},
-  en:{learn:'Learn',quiz:'Challenge',again:'Listen again',hearQ:'Hear the question',tap:'Tap a key',
-      says:'The book says the name for you.',music:'Each key plays a note and says its name.',tapRight:'Tap the right key.',
-      good:'Well done!',retry:'Try again.',num:'Number',color:'Color',shape:'Shape',note:'Musical note',
-      sound:s=>`Says ${s}`,said:(A,s)=>`${A} says ${s}.`,q:(a,pl)=>`Where ${pl?'are':'is'} ${a}?`,
-      qL:L=>`Where is the letter ${L}?`,qN:n=>`Where is number ${n}?`,qC:c=>`Where is the color ${c}?`,letter:(L,w)=>`${L} is for ${w}`},
-  es:{learn:'Aprender',quiz:'Desafío',again:'Escuchar otra vez',hearQ:'Escuchar la pregunta',tap:'Toca una tecla',
-      says:'El libro te dice el nombre.',music:'Cada tecla toca una nota y dice su nombre.',tapRight:'Toca la tecla correcta.',
-      good:'¡Muy bien!',retry:'Inténtalo otra vez.',num:'Número',color:'Color',shape:'Forma',note:'Nota musical',
-      sound:s=>`Hace ${s}`,said:(A,s)=>`${A} hace ${s}.`,q:(a,pl)=>`¿Dónde ${pl?'están':'está'} ${a}?`,
-      qL:L=>`¿Dónde está la letra ${L}?`,qN:n=>`¿Dónde está el número ${n}?`,qC:c=>`¿Dónde está el color ${c}?`,letter:(L,w)=>`${L} de ${w}`},
-  it:{learn:'Impara',quiz:'Sfida',again:'Ascolta ancora',hearQ:'Ascolta la domanda',tap:'Tocca un tasto',
-      says:'Il libro ti dice il nome.',music:'Ogni tasto suona una nota e dice il suo nome.',tapRight:'Tocca il tasto giusto.',
-      good:'Bravo!',retry:'Riprova.',num:'Numero',color:'Colore',shape:'Forma',note:'Nota musicale',
-      sound:s=>`Fa ${s}`,said:(A,s)=>`${A} fa ${s}.`,q:(a,pl)=>`${pl?'Dove sono':"Dov'è"} ${a}?`,
-      qL:L=>`Dov'è la lettera ${L}?`,qN:n=>`Dov'è il numero ${n}?`,qC:c=>`Dov'è il colore ${c}?`,letter:(L,w)=>`${L} come ${w}`}
-};
-
-/* ---------- Conteúdo do livro ---------- */
-const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-/* "o cachorro", "l'elefante", "las uvas*" (asterisco = plural) */
-function noun(s){
-  const pl=s.endsWith('*');s=s.replace('*','');
-  const name=cap(s.replace(/^(l'|(o|a|os|as|the|el|la|los|las|il|lo|i|gli|le)\s+)/i,''));
-  return {name,art:s,A:cap(s),pl};
-}
-
-/* Letras: cada idioma tem a sua palavra; o espanhol tem também o Ñ */
-const LW={
-  pt:'A Abelha 🐝|B Bola ⚽|C Casa 🏠|D Dado 🎲|E Elefante 🐘|F Flor 🌸|G Gato 🐱|H Hipopótamo 🦛|I Ilha 🏝️|J Jacaré 🐊|K Kiwi 🥝|L Leão 🦁|M Macaco 🐒|N Navio 🚢|O Ovo 🥚|P Pato 🦆|Q Queijo 🧀|R Rato 🐭|S Sapo 🐸|T Tartaruga 🐢|U Uva 🍇|V Vaca 🐄|W Waffle 🧇|X Xícara ☕|Y Yoga 🧘|Z Zebra 🦓',
-  en:'A Apple 🍎|B Ball ⚽|C Cat 🐱|D Dog 🐶|E Elephant 🐘|F Fish 🐟|G Grapes 🍇|H House 🏠|I Ice cream 🍦|J Juice 🧃|K Kite 🪁|L Lion 🦁|M Monkey 🐒|N Nose 👃|O Orange 🍊|P Pig 🐷|Q Queen 👑|R Rabbit 🐰|S Sun ☀️|T Turtle 🐢|U Umbrella ☂️|V Violin 🎻|W Whale 🐳|X Xylophone 🎶|Y Yo-yo 🪀|Z Zebra 🦓',
-  es:'A Abeja 🐝|B Ballena 🐳|C Casa 🏠|D Dado 🎲|E Elefante 🐘|F Flor 🌸|G Gato 🐱|H Helado 🍦|I Isla 🏝️|J Jirafa 🦒|K Kiwi 🥝|L León 🦁|M Mono 🐒|N Nube ☁️|Ñ Ñandú 🐦|O Oso 🐻|P Pato 🦆|Q Queso 🧀|R Ratón 🐭|S Sol ☀️|T Tortuga 🐢|U Uvas 🍇|V Vaca 🐄|W Wafle 🧇|X Xilófono 🎶|Y Yoyó 🪀|Z Zorro 🦊',
-  it:'A Ape 🐝|B Balena 🐳|C Casa 🏠|D Dado 🎲|E Elefante 🐘|F Fiore 🌸|G Gatto 🐱|H Hotel 🏨|I Isola 🏝️|J Jeans 👖|K Koala 🐨|L Leone 🦁|M Mela 🍎|N Nave 🚢|O Orso 🐻|P Pesce 🐟|Q Quadro 🖼️|R Rana 🐸|S Sole ☀️|T Tartaruga 🐢|U Uva 🍇|V Vaso 🏺|W Wafer 🧇|X Xilofono 🎶|Y Yogurt 🥛|Z Zebra 🦓'
-};
-const LMAP={};
-LK.forEach(l=>LW[l].split('|').forEach(row=>{
-  const p=row.split(' ');const L=p[0],e=p[p.length-1],w=p.slice(1,-1).join(' ');
-  (LMAP[L]=LMAP[L]||{})[l]={w,e};
-}));
-const ORDER='ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
-const letters=ORDER.filter(L=>LMAP[L]).map(L=>{
-  const it={kind:'text',g:L};
-  LK.forEach(l=>{const d=LMAP[L][l];if(!d)return;const t=UI[l].letter(L,d.w);
-    it[l]={name:L,line:`${t} ${d.e}`,say:t+'.',q:UI[l].qL(L),chip:`${d.w} ${d.e}`};});
-  return it;
-});
-
-const NUM={
-  pt:'zero um dois três quatro cinco seis sete oito nove dez onze doze treze catorze quinze dezesseis dezessete dezoito dezenove vinte',
-  en:'zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty',
-  es:'cero uno dos tres cuatro cinco seis siete ocho nueve diez once doce trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte',
-  it:'zero uno due tre quattro cinque sei sette otto nove dieci undici dodici tredici quattordici quindici sedici diciassette diciotto diciannove venti'
-};
-const numbers=Array.from({length:21},(_,i)=>{
-  const it={kind:'text',g:String(i),dots:i>0&&i<=10?i:0};
-  LK.forEach(l=>{const w=NUM[l].split(' ')[i];it[l]={name:w,line:`${UI[l].num} ${i}`,say:w,q:UI[l].qN(w)};});
-  return it;
-});
-
-const colors=[
- ['#E53935','Vermelho','Red','Rojo','Rosso'],['#1E66F5','Azul','Blue','Azul','Blu'],['#FFD21F','Amarelo','Yellow','Amarillo','Giallo'],
- ['#22A565','Verde','Green','Verde','Verde'],['#FF8A1F','Laranja','Orange','Naranja','Arancione'],['#8E44EC','Roxo','Purple','Morado','Viola'],
- ['#FF6FB5','Rosa','Pink','Rosa','Rosa'],['#8B5A2B','Marrom','Brown','Marrón','Marrone'],['#111111','Preto','Black','Negro','Nero'],
- ['#FFFFFF','Branco','White','Blanco','Bianco'],['#9AA3B2','Cinza','Gray','Gris','Grigio']
-].map(r=>{const it={kind:'color',g:r[0]};
-  LK.forEach((l,i)=>{const c=r[i+1];it[l]={name:c,line:UI[l].color,say:c,q:UI[l].qC(c.toLowerCase())};});return it;});
-
-const S=(inner,fill)=>`<svg class="g-shape" viewBox="0 0 100 100" fill="${fill}" aria-hidden="true">${inner}</svg>`;
-const shapes=[
- [S('<circle cx="50" cy="50" r="42"/>','#E53935'),'o círculo','the circle','el círculo','il cerchio'],
- [S('<rect x="10" y="10" width="80" height="80" rx="6"/>','#1E66F5'),'o quadrado','the square','el cuadrado','il quadrato'],
- [S('<polygon points="50,8 94,90 6,90"/>','#22A565'),'o triângulo','the triangle','el triángulo','il triangolo'],
- [S('<rect x="4" y="24" width="92" height="52" rx="6"/>','#FF8A1F'),'o retângulo','the rectangle','el rectángulo','il rettangolo'],
- [S('<polygon points="50,5 61,38 96,38 68,59 79,93 50,72 21,93 32,59 4,38 39,38"/>','#F5B400'),'a estrela','the star','la estrella','la stella'],
- [S('<path d="M50 88C10 60 4 36 18 22C30 10 46 16 50 28C54 16 70 10 82 22C96 36 90 60 50 88Z"/>','#FF4F8B'),'o coração','the heart','el corazón','il cuore'],
- [S('<polygon points="50,5 92,50 50,95 8,50"/>','#8E44EC'),'o losango','the diamond','el rombo','il rombo'],
- [S('<ellipse cx="50" cy="50" rx="46" ry="30"/>','#17A2B8'),'o oval','the oval','el óvalo',"l'ovale"]
-].map(r=>{const it={kind:'shape',g:r[0]};
-  LK.forEach((l,i)=>{const n=noun(r[i+1]);it[l]={name:n.name,line:UI[l].shape,say:n.name,q:UI[l].q(n.art,n.pl)};});return it;});
-
-/* Animais e frutas: [emoji, pt, en, es, it, sons opcionais] */
-function emojiItems(rows){
-  return rows.map(r=>{const it={kind:'emoji',g:r[0]};
-    LK.forEach((l,i)=>{const n=noun(r[i+1]);const s=r[5]&&r[5][i];
-      it[l]={name:n.name,line:s?UI[l].sound(s):'',say:s?UI[l].said(n.A,s):n.name,q:UI[l].q(n.art,n.pl)};});
-    return it;});
-}
-const animals=emojiItems([
- ['🐶','o cachorro','the dog','el perro','il cane',['au au','woof woof','guau guau','bau bau']],
- ['🐱','o gato','the cat','el gato','il gatto',['miau','meow','miau','miao']],
- ['🐄','a vaca','the cow','la vaca','la mucca',['muuu','moo','muuu','muuu']],
- ['🐷','o porco','the pig','el cerdo','il maiale',['óinc óinc','oink oink','oinc oinc','oink oink']],
- ['🐴','o cavalo','the horse','el caballo','il cavallo',['iiirrí','neigh','jiiii','hiii']],
- ['🐑','a ovelha','the sheep','la oveja','la pecora',['mééé','baa','beee','beee']],
- ['🐔','a galinha','the chicken','la gallina','la gallina',['có có có','cluck cluck','co co co','coccodè']],
- ['🦆','o pato','the duck','el pato',"l'anatra",['quá quá','quack quack','cuac cuac','qua qua']],
- ['🦁','o leão','the lion','el león','il leone',['roar','roar','grrr','grrr']],
- ['🐸','o sapo','the frog','la rana','la rana',['croac croac','ribbit','croac croac','cra cra']],
- ['🐘','o elefante','the elephant','el elefante',"l'elefante"],
- ['🐒','o macaco','the monkey','el mono','la scimmia'],
- ['🦒','a girafa','the giraffe','la jirafa','la giraffa'],
- ['🐟','o peixe','the fish','el pez','il pesce'],
- ['🦋','a borboleta','the butterfly','la mariposa','la farfalla'],
- ['🐢','a tartaruga','the turtle','la tortuga','la tartaruga']
-]);
-const fruits=emojiItems([
- ['🍎','a maçã','the apple','la manzana','la mela'],
- ['🍌','a banana','the banana','el plátano','la banana'],
- ['🍊','a laranja','the orange','la naranja',"l'arancia"],
- ['🍇','a uva','the grapes*','las uvas*',"l'uva"],
- ['🍓','o morango','the strawberry','la fresa','la fragola'],
- ['🍉','a melancia','the watermelon','la sandía',"l'anguria"],
- ['🍍','o abacaxi','the pineapple','la piña',"l'ananas"],
- ['🍐','a pera','the pear','la pera','la pera'],
- ['🥭','a manga','the mango','el mango','il mango'],
- ['🍋','o limão','the lemon','el limón','il limone'],
- ['🥥','o coco','the coconut','el coco','il cocco'],
- ['🥑','o abacate','the avocado','el aguacate',"l'avocado"],
- ['🍑','o pêssego','the peach','el melocotón','la pesca'],
- ['🍒','a cereja','the cherry','la cereza','la ciliegia'],
- ['🥝','o kiwi','the kiwi','el kiwi','il kiwi'],
- ['🍈','o melão','the melon','el melón','il melone']
-]);
-const NOTES={pt:'Dó Ré Mi Fá Sol Lá Si Dó',en:'C D E F G A B C',es:'Do Re Mi Fa Sol La Si Do',it:'Do Re Mi Fa Sol La Si Do'};
-const notes=[[261.63,'#E53935'],[293.66,'#FF8A1F'],[329.63,'#F5B400'],[349.23,'#22A565'],[392,'#17A2B8'],[440,'#1E66F5'],[493.88,'#8E44EC'],[523.25,'#FF4F8B']]
- .map(([f,c],i)=>{const it={kind:'note',g:'🎵',freq:f,color:c};
-   LK.forEach(l=>{const n=NOTES[l].split(' ')[i];it[l]={name:n,line:UI[l].note,say:n};});return it;});
-
-const CATS=[
- {id:'letras',icon:'Abc',t:{pt:'Letras',en:'Letters',es:'Letras',it:'Lettere'},c:'#3D7BFF',d:'#2A58C2',items:letters},
- {id:'numeros',icon:'123',t:{pt:'Números',en:'Numbers',es:'Números',it:'Numeri'},c:'#FF5A4E',d:'#C23A30',items:numbers},
- {id:'cores',icon:'●',t:{pt:'Cores',en:'Colors',es:'Colores',it:'Colori'},c:'#8E44EC',d:'#6328B5',items:colors},
- {id:'formas',icon:'▲',t:{pt:'Formas',en:'Shapes',es:'Formas',it:'Forme'},c:'#17A2B8',d:'#0E7485',items:shapes},
- {id:'animais',icon:'🐶',t:{pt:'Animais',en:'Animals',es:'Animales',it:'Animali'},c:'#22A565',d:'#167A49',items:animals},
- {id:'frutas',icon:'🍎',t:{pt:'Frutas',en:'Fruits',es:'Frutas',it:'Frutta'},c:'#FF8A1F',d:'#C2620A',items:fruits},
- {id:'musica',icon:'♪',t:{pt:'Música',en:'Music',es:'Música',it:'Musica'},c:'#FF4F8B',d:'#C22F63',items:notes}
-];
-
-/* ---------- Estado ---------- */
-const $=id=>document.getElementById(id);
-let lang='pt',mode='learn',cat=CATS[0],visible=[],current=null,target=null,stars=0,locked=false;
-try{const l=localStorage.getItem('lf-lang');if(LANGS[l])lang=l;}catch(e){}
-
-/* ---------- Voz e sons ---------- */
-const synth=window.speechSynthesis;
-let voices=[];
-const normLang=v=>v.lang.replace('_','-').toLowerCase();
-/* Vozes do idioma, da melhor para a pior: "Natural"/online primeiro, depois a região padrão */
-function voicesOf(l){
-  const full=LANGS[l].code.toLowerCase();
-  const score=v=>(/natural|neural|online/i.test(v.name)?4:0)+(normLang(v)===full?2:0)+(v.localService?0:1);
-  return voices.filter(v=>normLang(v).split('-')[0]===l).sort((a,b)=>score(b)-score(a));
-}
-function voiceFor(l){
-  const list=voicesOf(l);
-  let saved=null;try{saved=localStorage.getItem('lf-voice-'+l);}catch(e){}
-  return list.find(v=>v.name===saved)||list[0]||null;
-}
-const voiceLabel=v=>v.name.replace(/^Microsoft\s+/,'').replace(/\s+-\s+.*$/,'')+' ('+v.lang+')'+(v.localService?'':' · online');
-function renderVoices(){
-  const sel=$('voice'),list=voicesOf(lang);
-  sel.textContent='';
-  list.forEach(v=>{const o=document.createElement('option');o.value=v.name;o.textContent=voiceLabel(v);sel.appendChild(o);});
-  const cur=voiceFor(lang);if(cur)sel.value=cur.name;
-  sel.hidden=list.length<2;
-}
-function checkVoice(){
-  const n=$('notice');
-  if(!synth){n.hidden=false;n.textContent='Este navegador não tem voz. Abra o Kidoria ABC no Chrome, Edge ou Safari para ouvir os nomes.';return;}
-  if(voices.length&&!voiceFor(lang)){
-    n.hidden=false;
-    n.textContent=`Não encontrei voz em ${LANGS[lang].name} neste navegador/app. Se você acabou de instalar, feche e abra de novo. Ou abra o Kidoria ABC no Edge ou no Chrome.`;
-  }else n.hidden=true;
-}
-const loadVoices=()=>{try{voices=synth?synth.getVoices():[];}catch(e){voices=[];}checkVoice();renderVoices();};
-if(synth){loadVoices();try{synth.addEventListener('voiceschanged',loadVoices);}catch(e){}}
-
-/* Ajustes só no áudio (a tela não muda):
-   PT: a letra E sozinha seria lida como "i"; vira "êh" (som fechado "ê").
-   ES: a letra Y sozinha seria lida como "i"; vira "ye". */
-function fixSpeech(t,l){
-  if(l==='pt')t=t.replace(/(^|\s)E(?=[\s?.!,]|$)/g,'$1êh');
-  if(l==='es')t=t.replace(/(^|\s)Y(?=[\s?.!,]|$)/g,'$1ye');
-  return t;
-}
-function speak(text,l=lang){
-  if(!synth||!text)return;
-  const v=voiceFor(l);
-  /* Sem voz do idioma, não fala: uma voz de outro idioma lendo espanhol ou italiano sai errada */
-  if(!v&&voices.length){checkVoice();return;}
-  try{
-    synth.cancel();
-    const u=new SpeechSynthesisUtterance(fixSpeech(text,l));
-    u.lang=v?v.lang:LANGS[l].code;
-    if(v)u.voice=v;
-    const kid=(l==='pt'||l==='en');
-    u.rate=kid?.85:.9;u.pitch=kid?1.15:1;
-    synth.speak(u);
-  }catch(e){}
-}
-let ctx=null;
-function tone(freq,dur=.5,type='triangle',when=0,vol=.25){
-  try{
-    ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
-    if(ctx.state==='suspended')ctx.resume();
-    const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+when;
-    o.type=type;o.frequency.value=freq;
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur);
-    o.connect(g).connect(ctx.destination);o.start(t);o.stop(t+dur+.05);
-  }catch(e){}
-}
-const chime=()=>{tone(523.25,.18,'sine',0);tone(659.25,.18,'sine',.12);tone(783.99,.35,'sine',.24);};
-const buzz=()=>tone(160,.25,'sawtooth',0,.12);
-/* Nota musical: toca o som e logo depois a voz diz o nome (Dó, Ré, Mi...) */
-let noteTimer=null;
-function playNote(it,l=lang){
-  clearTimeout(noteTimer);
-  try{synth&&synth.cancel();}catch(e){}
-  tone(it.freq,.9);
-  noteTimer=setTimeout(()=>speak(it[l].say,l),650);
-}
-
-/* ---------- Desenho ---------- */
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function glyphHTML(it){
-  if(it.kind==='text')return `<span class="g-text">${it.g}</span>`;
-  if(it.kind==='color')return `<span class="g-color" style="background:${it.g}"></span>`;
-  if(it.kind==='shape')return it.g;
-  return `<span class="g-emoji">${it.g}</span>`;
-}
-function renderLangs(){
-  $('langs').innerHTML=LK.map(l=>`<button data-l="${l}" aria-pressed="${l===lang}" title="${LANGS[l].name}" aria-label="${LANGS[l].name}">${LANGS[l].short}</button>`).join('');
-}
-function renderTabs(){
-  $('tabs').innerHTML=CATS.map(c=>`<button class="tab" role="tab" data-id="${c.id}" aria-selected="${c===cat}" style="--tc:${c.c}"><b>${c.icon}</b>${c.t[lang]}</button>`).join('');
-}
-function renderKeys(){
-  const app=$('app');
-  app.style.setProperty('--cat',cat.c);app.style.setProperty('--cat-dark',cat.d);
-  app.classList.toggle('quiz',mode==='quiz');
-  visible=cat.items.filter(it=>it[lang]);
-  $('keys').innerHTML=visible.map((it,i)=>{
-    const nm=esc(it[lang].name);
-    if(it.kind==='note')return `<button class="key note" data-i="${i}" style="--nc:${it.color}" aria-label="${nm}"><span class="g-emoji">🎵</span><small>${nm}</small></button>`;
-    const dots=it.dots?`<span class="dots">${'★'.repeat(it.dots)}</span>`:'';
-    return `<button class="key" data-i="${i}" aria-label="${nm}">${glyphHTML(it)}${dots}<small>${nm}</small></button>`;
-  }).join('');
-  $('keys').scrollTop=0;
-}
-function renderChips(it){
-  const box=$('chips');
-  const others=it?LK.filter(l=>l!==lang&&it[l]):[];
-  box.innerHTML=others.map(l=>`<button class="chip" data-l="${l}" aria-label="${LANGS[l].name}: ${esc(it[l].chip||it[l].name)}"><b>${LANGS[l].short}</b>${esc(it[l].chip||it[l].name)}</button>`).join('');
-  box.hidden=!others.length;
-}
-function showItem(it,hint){
-  current=it;
-  const g=$('glyph');g.innerHTML=glyphHTML(it);g.classList.remove('pop');void g.offsetWidth;g.classList.add('pop');
-  $('hint').textContent=hint||cat.t[lang];
-  $('name').textContent=it[lang].name;
-  $('line').textContent=it[lang].line||'';
-  $('again').hidden=false;$('again').textContent=UI[lang].again;
-  renderChips(it);
-}
-function showPrompt(){
-  $('glyph').innerHTML='<span class="g-text">?</span>';
-  $('hint').textContent=UI[lang].quiz;
-  $('name').textContent=target[lang].q;
-  $('line').textContent=UI[lang].tapRight;
-  $('again').hidden=false;$('again').textContent=UI[lang].hearQ;
-  renderChips(null);
-}
-function welcome(){
-  current=null;
-  $('glyph').innerHTML=`<span class="g-text">${cat.icon}</span>`;
-  $('hint').textContent=cat.t[lang];
-  $('name').textContent=UI[lang].tap;
-  $('line').textContent=cat.id==='musica'?UI[lang].music:UI[lang].says;
-  $('again').hidden=true;renderChips(null);
-}
-function newRound(say=true){
-  const pool=visible.filter(i=>i!==target);
-  target=pool[Math.floor(Math.random()*pool.length)];
-  locked=false;showPrompt();
-  document.querySelectorAll('.key.right').forEach(k=>k.classList.remove('right'));
-  if(say)speak(target[lang].q);
-}
-function refresh(say=false){
-  if(cat.id==='musica'&&mode==='quiz')mode='learn';
-  document.documentElement.lang=LANGS[lang].code;
-  renderLangs();renderVoices();
-  $('mode-learn').setAttribute('aria-pressed',mode==='learn');$('mode-quiz').setAttribute('aria-pressed',mode==='quiz');
-  $('mode-learn').textContent=UI[lang].learn;$('mode-quiz').textContent=UI[lang].quiz;
-  $('mode-quiz').disabled=cat.id==='musica';$('mode-quiz').style.opacity=cat.id==='musica'?.4:1;
-  $('stars').hidden=mode!=='quiz';$('stars').textContent='★ '+stars;
-  renderTabs();renderKeys();
-  if(mode==='quiz')newRound(say);else welcome();
-}
-
-/* ---------- Eventos ---------- */
-$('keys').addEventListener('click',e=>{
-  const k=e.target.closest('.key');if(!k)return;
-  const it=visible[+k.dataset.i];
-  if(it.kind==='note'){showItem(it);playNote(it);return;}
-  if(mode==='learn'){showItem(it);speak(it[lang].say);return;}
-  if(locked)return;
-  if(it===target){
-    locked=true;k.classList.add('right');stars++;$('stars').textContent='★ '+stars;chime();
-    showItem(it,UI[lang].good);$('again').hidden=true;renderChips(null);
-    setTimeout(()=>speak(UI[lang].good+' '+it[lang].name),350);
-    setTimeout(()=>{if(mode==='quiz')newRound();},2600);
-  }else{
-    buzz();k.classList.remove('wrong');void k.offsetWidth;k.classList.add('wrong');
-    setTimeout(()=>speak(UI[lang].retry+' '+target[lang].q),250);
+/* ---------- Header condicional ---------- */
+(function(){
+  var h=document.getElementById('siteHeader'),last=window.scrollY,tick=false,TH=8,TOP=40;
+  function up(){
+    var y=window.scrollY,d=y-last;
+    h.classList.toggle('header-scrolled',y>TOP);
+    var menuOpen=document.getElementById('mobileNav').classList.contains('open');
+    if(y<=TOP||menuOpen)h.classList.remove('header-hidden');
+    else if(d>TH)h.classList.add('header-hidden');
+    else if(d<-TH)h.classList.remove('header-hidden');
+    last=y;tick=false;
   }
-});
-$('tabs').addEventListener('click',e=>{
-  const t=e.target.closest('.tab');if(!t)return;
-  cat=CATS.find(c=>c.id===t.dataset.id);target=null;
-  if(mode==='learn')speak(cat.t[lang]);
-  refresh(true);
-});
-$('again').addEventListener('click',()=>{
-  if(mode==='quiz'&&target&&!locked)speak(target[lang].q);
-  else if(current&&current.kind==='note')playNote(current);
-  else if(current)speak(current[lang].say);
-});
-$('chips').addEventListener('click',e=>{
-  const c=e.target.closest('.chip');if(!c||!current)return;
-  const l=c.dataset.l;
-  if(current.kind==='note')playNote(current,l);else speak(current[l].say,l);
-});
-$('langs').addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;
-  lang=b.dataset.l;try{localStorage.setItem('lf-lang',lang);}catch(err){}
-  target=null;speak(LANGS[lang].name,lang);checkVoice();refresh(false);
-  if(mode==='quiz')setTimeout(()=>speak(target[lang].q),900);
-});
-$('voice').addEventListener('change',e=>{
-  try{localStorage.setItem('lf-voice-'+lang,e.target.value);}catch(err){}
-  speak(LANGS[lang].hi,lang);
-});
-$('mode-learn').addEventListener('click',()=>{mode='learn';target=null;refresh();});
-$('mode-quiz').addEventListener('click',()=>{if(cat.id==='musica')return;mode='quiz';refresh(true);});
+  window.addEventListener('scroll',function(){if(!tick){requestAnimationFrame(up);tick=true}},{passive:true});
+  up();
+})();
 
-/* ---------- Início ---------- */
-refresh();
-checkVoice();
+/* ---------- Menu âncora (scroll suave) + menu móvel + scroll-spy ---------- */
+(function(){
+  var header=document.getElementById('siteHeader'),btn=document.getElementById('menuBtn'),mob=document.getElementById('mobileNav');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function off(){return header.offsetHeight+12}
+  document.querySelectorAll('[data-anchor]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href'),t=document.querySelector(id);
+      if(!t)return;e.preventDefault();
+      var top=id==='#topo'?0:t.getBoundingClientRect().top+window.scrollY-off()+(header.classList.contains('header-hidden')?0:0);
+      window.scrollTo({top:top,behavior:reduce?'auto':'smooth'});
+      try{history.pushState(null,'',id)}catch(_){}
+      mob.classList.remove('open');btn.setAttribute('aria-expanded','false');
+    });
+  });
+  btn.addEventListener('click',function(){
+    var o=mob.classList.toggle('open');btn.setAttribute('aria-expanded',String(o));
+    btn.textContent=o?'✕':'☰';
+  });
+  var links=document.querySelectorAll('.bar nav a[data-anchor]');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if(en.isIntersecting){links.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+en.target.id)})}
+      });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    ['descobrir','como','pais','faq'].forEach(function(id){var s=document.getElementById(id);if(s)io.observe(s)});
+  }
+})();
+
+/* ---------- Voltar ao topo ---------- */
+(function(){
+  var b=document.getElementById('scrollTopBtn');
+  function t(){b.classList.toggle('visible',window.scrollY>700)}
+  b.addEventListener('click',function(){window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})});
+  window.addEventListener('scroll',t,{passive:true});t();
+})();
+
+/* ---------- Revelar ao rolar ---------- */
+(function(){
+  var els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return}
+  var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}})},{threshold:.12});
+  els.forEach(function(e){io.observe(e)});
+})();
+
+/* ---------- Demo: toque e ouça ---------- */
+(function(){
+  var DATA={
+    pt:{code:'pt-BR',hint:'🔊 Ligue o som do seu aparelho.',i:[
+      ['letras','Letras','🔤','A, bê, cê','A, bê, cê'],['num','Números','🔢','Um, dois, três','Um, dois, três'],
+      ['cores','Cores','🎨','Azul','Azul'],['formas','Formas','🔵','Círculo','Círculo'],
+      ['animais','Animais','🦁','Leão','Leão'],['frutas','Frutas','🍎','Maçã','Maçã'],['musica','Música','🎵','Dó, ré, mi','Dó, ré, mi']]},
+    en:{code:'en-US',hint:'🔊 Turn your device sound on.',i:[
+      ['letras','Letras','🔤','A, B, C','A, B, C'],['num','Números','🔢','One, two, three','One, two, three'],
+      ['cores','Cores','🎨','Blue','Blue'],['formas','Formas','🔵','Circle','Circle'],
+      ['animais','Animais','🦁','Lion','Lion'],['frutas','Frutas','🍎','Apple','Apple'],['musica','Música','🎵','Do, re, mi','Do, re, mi']]},
+    es:{code:'es-ES',hint:'🔊 Activa el sonido de tu dispositivo.',i:[
+      ['letras','Letras','🔤','A, be, ce','A, be, ce'],['num','Números','🔢','Uno, dos, tres','Uno, dos, tres'],
+      ['cores','Cores','🎨','Azul','Azul'],['formas','Formas','🔵','Círculo','Círculo'],
+      ['animais','Animais','🦁','León','León'],['frutas','Frutas','🍎','Manzana','Manzana'],['musica','Música','🎵','Do, re, mi','Do, re, mi']]},
+    it:{code:'it-IT',hint:'🔊 Attiva l’audio del tuo dispositivo.',i:[
+      ['letras','Letras','🔤','A, bi, ci','A, bi, ci'],['num','Números','🔢','Uno, due, tre','Uno, due, tre'],
+      ['cores','Cores','🎨','Blu','Blu'],['formas','Formas','🔵','Cerchio','Cerchio'],
+      ['animais','Animais','🦁','Leone','Leone'],['frutas','Frutas','🍎','Mela','Mela'],['musica','Música','🎵','Do, re, mi','Do, re, mi']]}
+  };
+  var cls={letras:'t-letras',num:'t-num',cores:'t-cores',formas:'t-formas',animais:'t-animais',frutas:'t-frutas',musica:'t-musica'};
+  var wrap=document.getElementById('tiles'),hint=document.getElementById('hint'),cur='pt';
+  var synth=window.speechSynthesis;
+  function voiceFor(code){
+    if(!synth)return null;var vs=synth.getVoices()||[],l=code.toLowerCase(),b=l.split('-')[0];
+    return vs.find(function(v){return v.lang.toLowerCase().replace('_','-')===l})||vs.find(function(v){return v.lang.toLowerCase().indexOf(b)===0})||null;
+  }
+  function say(text,el){
+    el.classList.add('say');setTimeout(function(){el.classList.remove('say')},450);
+    if(!synth){hint.textContent='Seu navegador não tem voz. Abra o app em outro aparelho para ouvir.';return}
+    synth.cancel();var u=new SpeechSynthesisUtterance(text),d=DATA[cur];
+    u.lang=d.code;var v=voiceFor(d.code);if(v)u.voice=v;u.rate=.85;u.pitch=1.15;synth.speak(u);
+  }
+  function render(){
+    var d=DATA[cur];wrap.innerHTML='';hint.textContent=d.hint;
+    d.i.forEach(function(it,n){
+      var b=document.createElement('button');b.type='button';
+      b.className='tile '+cls[it[0]]+(n===6?' wide':'');
+      b.innerHTML='<span class="cat">'+it[1]+'</span><span class="glyph" aria-hidden="true">'+it[2]+'</span><span class="word">'+it[3]+'</span>';
+      b.setAttribute('aria-label',it[1]+': '+it[3]+'. Toque para ouvir.');
+      b.addEventListener('click',function(){say(it[4],b)});
+      wrap.appendChild(b);
+    });
+  }
+  document.querySelectorAll('#langbar button').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      cur=btn.dataset.l;
+      document.querySelectorAll('#langbar button').forEach(function(x){x.setAttribute('aria-pressed',String(x===btn))});
+      render();
+    });
+  });
+  if(synth&&synth.onvoiceschanged!==undefined)synth.onvoiceschanged=function(){};
+  render();
+})();
 </script>
 </body>
 </html>

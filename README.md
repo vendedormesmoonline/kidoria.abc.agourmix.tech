@@ -1,7 +1,9 @@
 # Kidoria ABC
 
-App infantil (3 a 8 anos) de letras, números, cores, formas, animais, frutas e música, com voz em português, inglês, espanhol e italiano. Parte do ecossistema Kidoria.
+Livro falante digital para crianças de 3 a 8 anos: letras, números, cores, formas, animais, frutas e música, com voz em português, inglês, espanhol e italiano. Faz parte do ecossistema Kidoria.
 
-- Site estático (sem build): `index.html` + `logo.webp`
+- `index.html` – landing page (crianças e pais)
+- `app/index.html` – o app (arquivo único, sem build)
+- `assets/` – logomarcas e imagens otimizadas (WebP, ampliadas com super-resolução)
 - Domínio: kidoria.abc.agourmix.tech
-- Hospedagem: Vercel (framework "Other", sem comando de build, diretório raiz)
+- Hospedagem: Vercel (Framework "Other", sem build, diretório raiz)
