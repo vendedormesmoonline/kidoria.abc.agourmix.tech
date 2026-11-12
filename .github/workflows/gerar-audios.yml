@@ -25,7 +25,7 @@ jobs:
           node-version: 20
       - name: Gerar áudios e salvar no repositório
         env:
-          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY || secrets.ELEVENLABSKEY }}
           IDIOMAS: ${{ inputs.idiomas }}
           SO_ESTIMAR: ${{ inputs.somente_estimar }}
         run: |
