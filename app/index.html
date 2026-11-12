@@ -346,7 +346,12 @@ if(synth){loadVoices();try{synth.addEventListener('voiceschanged',loadVoices);}c
    PT: a letra E sozinha seria lida como "i"; vira "êh" (som fechado "ê").
    ES: a letra Y sozinha seria lida como "i"; vira "ye". */
 function fixSpeech(t,l){
-  if(l==='pt')t=t.replace(/(^|\s)E(?=[\s?.!,]|$)/g,'$1êh');
+  if(l==='pt'){
+    /* Letra sozinha é lida errado pela locução; aqui ela vira o nome da letra por extenso (só no áudio) */
+    const N={H:'agá',I:'í',J:'jota',K:'cá',O:'ó',Q:'quê',R:'érre',W:'dáblio',Y:'ípsilon'};
+    t=t.replace(/^([A-Z])(?= de |$)/,(m,L)=>N[L]||L).replace(/(letra )([A-Z])(?=[?.!]|$)/,(m,a,L)=>a+(N[L]||L));
+    t=t.replace(/(^|\s)E(?=[\s?.!,]|$)/g,'$1êh');
+  }
   if(l==='es')t=t.replace(/(^|\s)Y(?=[\s?.!,]|$)/g,'$1ye');
   return t;
 }
