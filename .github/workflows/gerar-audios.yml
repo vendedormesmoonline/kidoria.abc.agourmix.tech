@@ -23,21 +23,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Gerar áudios
+      - name: Gerar áudios e salvar no repositório
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          IDIOMAS: ${{ inputs.idiomas }}
+          SO_ESTIMAR: ${{ inputs.somente_estimar }}
         run: |
-          if [ "${{ inputs.somente_estimar }}" = "true" ]; then
-            node scripts/gerar-audios.mjs --idiomas "${{ inputs.idiomas }}" --estimar
-          else
-            node scripts/gerar-audios.mjs --idiomas "${{ inputs.idiomas }}"
+          if [ "$SO_ESTIMAR" = "true" ]; then
+            echo "Modo só estimar: nada será gerado."
+            node scripts/gerar-audios.mjs --idiomas "$IDIOMAS" --estimar
+            exit 0
           fi
-      - name: Salvar no repositório
-        if: ${{ inputs.somente_estimar != true }}
-        run: |
+          node scripts/gerar-audios.mjs --idiomas "$IDIOMAS"
           git config user.name "kidoria-bot"
           git config user.email "kidoria-bot@users.noreply.github.com"
           git add app/audio
           git diff --cached --quiet && echo "Nada novo." && exit 0
-          git commit -m "Locução ElevenLabs: ${{ inputs.idiomas }}"
+          git commit -m "Locução ElevenLabs: $IDIOMAS"
           git push
