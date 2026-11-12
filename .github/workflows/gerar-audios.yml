@@ -34,10 +34,10 @@ jobs:
             node scripts/gerar-audios.mjs --idiomas "$IDIOMAS" --estimar
             exit 0
           fi
-          node scripts/gerar-audios.mjs --idiomas "$IDIOMAS"
+          FALHOU=0
+          node scripts/gerar-audios.mjs --idiomas "$IDIOMAS" || FALHOU=$?
           git config user.name "kidoria-bot"
           git config user.email "kidoria-bot@users.noreply.github.com"
           git add app/audio
-          git diff --cached --quiet && echo "Nada novo." && exit 0
-          git commit -m "Locução ElevenLabs: $IDIOMAS"
-          git push
+          if git diff --cached --quiet; then echo "Nada novo."; else git commit -m "Locução ElevenLabs: $IDIOMAS" && git push; fi
+          exit $FALHOU

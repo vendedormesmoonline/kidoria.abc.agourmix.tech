@@ -51,7 +51,7 @@ async function tts(voiceId, texto) {
   throw new Error('ElevenLabs não respondeu depois de 4 tentativas.');
 }
 
-let totalChars = 0, gerados = 0;
+let totalChars = 0, gerados = 0, falhou = false;
 for (const l of idiomas) {
   const v = vozes[l];
   if (!v || !v.voice_id) { console.log(`[${l}] sem voice_id em scripts/vozes.json; pulando.`); continue; }
@@ -62,13 +62,22 @@ for (const l of idiomas) {
   totalChars += chars;
   console.log(`[${l}] ${v.voz}: ${frases.length} frases, faltam ${faltam.length} (${chars} caracteres).`);
   if (estimar) continue;
+  // As frases mais ouvidas primeiro ("H de Hipopótamo."), depois as perguntas e os nomes soltos
+  faltam.sort((a, b) => (/ de | is for | come /.test(b) ? 1 : 0) - (/ de | is for | come /.test(a) ? 1 : 0));
   for (const [i, t] of faltam.entries()) {
-    const mp3 = await tts(v.voice_id, fixSpeech(t, l));
-    fs.writeFileSync(path.join(pastaAudio, l, phraseKey(l, t) + '.mp3'), mp3);
-    gerados++;
+    try {
+      const mp3 = await tts(v.voice_id, fixSpeech(t, l));
+      fs.writeFileSync(path.join(pastaAudio, l, phraseKey(l, t) + '.mp3'), mp3);
+      gerados++;
+    } catch (e) {
+      // Se os créditos acabarem no meio, o que já foi gravado fica salvo
+      console.error(`[${l}] Parei em ${i}/${faltam.length}: ${e.message}`);
+      falhou = true; break;
+    }
     if ((i + 1) % 20 === 0) console.log(`[${l}] ${i + 1}/${faltam.length}`);
   }
   manifest[l] = frases.map(t => phraseKey(l, t)).filter(k => fs.existsSync(path.join(pastaAudio, l, k + '.mp3'))).sort();
 }
 if (!estimar) fs.writeFileSync(manifestPath, JSON.stringify(manifest) + '\n');
+if (falhou) process.exitCode = 2;
 console.log(estimar ? `Estimativa: ${totalChars} caracteres (≈ ${totalChars} créditos).` : `Pronto: ${gerados} áudios novos, modelo ${modelo}.`);
